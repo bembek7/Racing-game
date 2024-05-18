@@ -5,6 +5,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputActionValue.h"
 
 // Sets default values
 AVehicleBase::AVehicleBase()
@@ -128,6 +131,27 @@ void AVehicleBase::BeginPlay()
 	
 }
 
+void AVehicleBase::Steering(const FInputActionValue& Value)
+{
+	const float SteeringValue = Value.Get<float>();
+
+	GetVehicleMovement()->SetSteeringInput(SteeringValue);
+}
+
+void AVehicleBase::Throttle(const FInputActionValue& Value)
+{
+	const float ThrottleValue = Value.Get<float>();
+
+	GetVehicleMovement()->SetThrottleInput(ThrottleValue);
+}
+
+void AVehicleBase::Brake(const FInputActionValue& Value)
+{
+	const float BreakValue = Value.Get<float>();
+
+	GetVehicleMovement()->SetBrakeInput(BreakValue);
+}
+
 // Called every frame
 void AVehicleBase::Tick(float DeltaTime)
 {
@@ -140,5 +164,26 @@ void AVehicleBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		if(SteeringAction)
+		{
+			EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Triggered, this, &AVehicleBase::Steering);
+			EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AVehicleBase::Steering);
+		}
+
+		if(ThrottleAction)
+		{
+			EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Triggered, this, &AVehicleBase::Throttle);
+			EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Completed, this, &AVehicleBase::Throttle);
+		}
+
+		if(BrakeAction)
+		{
+			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Triggered, this, &AVehicleBase::Brake);
+			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Completed, this, &AVehicleBase::Brake);
+		}
+	}
 }
 

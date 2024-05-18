@@ -6,6 +6,8 @@
 #include "WheeledVehiclePawn.h"
 #include "VehicleBase.generated.h"
 
+struct FInputActionValue;
+
 UCLASS()
 class PRAKTYKI_API AVehicleBase : public AWheeledVehiclePawn
 {
@@ -15,20 +17,40 @@ public:
 	// Sets default values for this pawn's properties
 	AVehicleBase();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+private:
+	/** Handles steering input */
+	void Steering(const FInputActionValue& Value);
+
+	/** Handles throttle input */
+	void Throttle(const FInputActionValue& Value);
+
+	/** Handles brake input */
+	void Brake(const FInputActionValue& Value);
+
 public:
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	class UInputAction* SteeringAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	class UInputAction* ThrottleAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	class UInputAction* BrakeAction;
+
+
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Body;
 
