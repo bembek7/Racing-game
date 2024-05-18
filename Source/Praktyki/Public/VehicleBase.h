@@ -1,0 +1,139 @@
+// Copyright 2023 Teyon. All Rights Reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "WheeledVehiclePawn.h"
+#include "VehicleBase.generated.h"
+
+UCLASS()
+class PRAKTYKI_API AVehicleBase : public AWheeledVehiclePawn
+{
+	GENERATED_BODY()
+
+public:
+	// Sets default values for this pawn's properties
+	AVehicleBase();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* Body;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* FrontBumper;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RightDoor;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* LeftDoor;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RearBumper;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RearBoot;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* BackSpoiler;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* LeftWingMirror;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RightWingMirror;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* LeftBackWheel;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RightBackWheel;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* LeftFrontWheel;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RightFrontWheel;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* EngineComponents;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* ExteriorInteriorWindows;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* LeftFender;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RightFender;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* FrontHood;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* LeftRearCaliper;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RightRearCaliper;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* LeftFrontCaliper;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RightFrontCaliper;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* Interior;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* Net;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* BrakePedal;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* AccelerationPedal;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* LeftRearBrakeDisc;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RightRearBrakeDisc;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* LeftFrontBrakeDisc;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RightFrontBrakeDisc;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* RearDiffuser;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* SeatNetClamps;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* SteeringWheel;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* Wiper;
+
+	UPROPERTY(EditDefaultsOnly)
+	class UCameraComponent* Camera;
+
+	UPROPERTY(EditDefaultsOnly)
+	class USpringArmComponent* SpringArm;
+};
