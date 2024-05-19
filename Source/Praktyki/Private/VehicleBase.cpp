@@ -1,6 +1,5 @@
 // Copyright 2023 Teyon. All Rights Reserved.
 
-
 #include "VehicleBase.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -12,7 +11,7 @@
 // Sets default values
 AVehicleBase::AVehicleBase()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(FName("Body"));
@@ -128,7 +127,6 @@ AVehicleBase::AVehicleBase()
 void AVehicleBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AVehicleBase::Steering(const FInputActionValue& Value)
@@ -156,7 +154,6 @@ void AVehicleBase::Brake(const FInputActionValue& Value)
 void AVehicleBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -164,22 +161,21 @@ void AVehicleBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		if(SteeringAction)
+		if (SteeringAction)
 		{
 			EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Triggered, this, &AVehicleBase::Steering);
 			EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AVehicleBase::Steering);
 		}
 
-		if(ThrottleAction)
+		if (ThrottleAction)
 		{
 			EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Triggered, this, &AVehicleBase::Throttle);
 			EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Completed, this, &AVehicleBase::Throttle);
 		}
 
-		if(BrakeAction)
+		if (BrakeAction)
 		{
 			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Triggered, this, &AVehicleBase::Brake);
 			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Completed, this, &AVehicleBase::Brake);
@@ -187,7 +183,7 @@ void AVehicleBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	}
 }
 
-void AVehicleBase::LapStarted()
+void AVehicleBase::LapFinished()
 {
 	++CurrentLap;
 	VisitedCheckpoints.Empty();
@@ -197,7 +193,18 @@ void AVehicleBase::CheckpointReached(AActor* const CheckpointReached)
 {
 	if (!VisitedCheckpoints.Contains(CheckpointReached))
 	{
-		++NrOfCheckpointsPassed;
+		++NumberOfCheckpointsReached;
+		VisitedCheckpoints.Add(CheckpointReached);
+		UE_LOG(LogTemp, Warning, TEXT("Checkpoint reached valid"));
 	}
 }
 
+uint32 AVehicleBase::GetNumberOfCheckpointsReached() const
+{
+	return NumberOfCheckpointsReached;
+}
+
+uint32 AVehicleBase::GetCurrentLap() const
+{
+	return CurrentLap;
+}

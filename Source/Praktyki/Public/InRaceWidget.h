@@ -7,7 +7,7 @@
 #include "InRaceWidget.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PRAKTYKI_API UInRaceWidget : public UUserWidget
@@ -34,5 +34,5 @@ protected:
 	class UTextBlock* CountDownText;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UTextBlock* CurrentLap;
+	class UTextBlock* CurrentLapText;
 };

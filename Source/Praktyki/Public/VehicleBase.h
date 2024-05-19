@@ -23,9 +23,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void LapStarted();
+	void LapFinished();
 
 	void CheckpointReached(AActor* const CheckpointReached);
+
+	uint32 GetNumberOfCheckpointsReached() const;
+
+	uint32 GetCurrentLap() const;
 
 protected:
 	// Called when the game starts or when spawned
@@ -52,7 +56,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
 	class UInputAction* BrakeAction;
-
 
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Body;
@@ -167,6 +170,5 @@ private:
 
 	uint32 CurrentLap = 0;
 
-	uint32 NrOfCheckpointsPassed = 0;
-
+	uint32 NumberOfCheckpointsReached = 0;
 };

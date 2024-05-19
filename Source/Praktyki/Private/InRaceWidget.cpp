@@ -1,15 +1,15 @@
 // Copyright 2023 Teyon. All Rights Reserved.
 
-
 #include "InRaceWidget.h"
 #include "PlayerControllerBase.h"
 #include "Components/TextBlock.h"
+#include "VehicleBase.h"
 
 void UInRaceWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	CurrentLap->SetVisibility(ESlateVisibility::Collapsed);
+	CurrentLapText->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 FText UInRaceWidget::GetCountDownText() const
@@ -24,11 +24,19 @@ FText UInRaceWidget::GetCountDownText() const
 
 FText UInRaceWidget::GetCurrentLapText() const
 {
-	return FText::FromString(FString::FromInt(0));
+	if (APlayerControllerBase* const OwningController = Cast<APlayerControllerBase>(GetOwningPlayer()))
+	{
+		if (AVehicleBase* const OwningVehicle = Cast<AVehicleBase>(OwningController->GetPawn()))
+		{
+			const uint32 VehicleCurrentLap = OwningVehicle->GetCurrentLap();
+			return FText::FromString(FString::FromInt(VehicleCurrentLap));
+		}
+	}
+	return FText();
 }
 
 void UInRaceWidget::RaceStarted()
 {
 	CountDownText->SetVisibility(ESlateVisibility::Collapsed);
-	CurrentLap->SetVisibility(ESlateVisibility::Visible);
+	CurrentLapText->SetVisibility(ESlateVisibility::Visible);
 }
