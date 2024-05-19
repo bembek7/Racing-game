@@ -43,16 +43,16 @@ AVehicleBase::AVehicleBase()
 	RightWingMirror->SetupAttachment(GetMesh(), FName("wing_mirror_right"));
 
 	LeftBackWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Back Wheel"));
-	LeftBackWheel->SetupAttachment(GetMesh(), FName("wheel_back_left_spin"));
+	LeftBackWheel->SetupAttachment(GetMesh(), FName("suspension_back_left"));
 
 	RightBackWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Back Wheel"));
-	RightBackWheel->SetupAttachment(GetMesh(), FName("wheel_back_right_spin"));
+	RightBackWheel->SetupAttachment(GetMesh(), FName("suspension_back_right"));
 
 	LeftFrontWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Front Wheel"));
-	LeftFrontWheel->SetupAttachment(GetMesh(), FName("wheel_front_left_spin"));
+	LeftFrontWheel->SetupAttachment(GetMesh(), FName("suspension_front_left"));
 
 	RightFrontWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Front Wheel"));
-	RightFrontWheel->SetupAttachment(GetMesh(), FName("wheel_front_right_spin"));
+	RightFrontWheel->SetupAttachment(GetMesh(), FName("suspension_front_right"));
 
 	EngineComponents = CreateDefaultSubobject<UStaticMeshComponent>(FName("Engine Components"));
 	EngineComponents->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
@@ -184,6 +184,20 @@ void AVehicleBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Triggered, this, &AVehicleBase::Brake);
 			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Completed, this, &AVehicleBase::Brake);
 		}
+	}
+}
+
+void AVehicleBase::LapStarted()
+{
+	++CurrentLap;
+	VisitedCheckpoints.Empty();
+}
+
+void AVehicleBase::CheckpointReached(AActor* const CheckpointReached)
+{
+	if (!VisitedCheckpoints.Contains(CheckpointReached))
+	{
+		++NrOfCheckpointsPassed;
 	}
 }
 

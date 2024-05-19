@@ -23,6 +23,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void LapStarted();
+
+	void CheckpointReached(AActor* const CheckpointReached);
 
 protected:
 	// Called when the game starts or when spawned
@@ -158,4 +161,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	class USpringArmComponent* SpringArm;
+
+private:
+	TArray<AActor*>VisitedCheckpoints;
+
+	uint32 CurrentLap = 0;
+
+	uint32 NrOfCheckpointsPassed = 0;
+
 };
