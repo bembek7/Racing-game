@@ -13,11 +13,34 @@ UCLASS()
 class PRAKTYKI_API APlayerControllerBase : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	void StartCountDown();
+
+	float GetTimeLeftInCountdown() const;
 	
 protected:
 	virtual void SetupInputComponent() override;
 
+	virtual void BeginPlay() override;
+
+private:
+	UFUNCTION()
+	void StartRace();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Input)
 	class UInputMappingContext* InputMappingContext;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget>MainMenuWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget>InRaceWidgetClass;
+
+private:
+	const float TimeToRaceStart = 3.f;
+	FTimerHandle CountDownHandle;
+	class UInRaceWidget* InRaceWidget;
+	UUserWidget* MainMenuWidget;
 };
