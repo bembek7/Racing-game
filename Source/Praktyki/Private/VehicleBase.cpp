@@ -117,7 +117,7 @@ AVehicleBase::AVehicleBase()
 	Wiper->SetupAttachment(GetMesh(), FName("hood_front"));
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(FName("Spring Arm"));
-	SpringArm->SetupAttachment(GetMesh());
+	SpringArm->SetupAttachment(GetRootComponent());
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(FName("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -150,6 +150,15 @@ void AVehicleBase::Brake(const FInputActionValue& Value)
 	GetVehicleMovement()->SetBrakeInput(BreakValue);
 }
 
+void AVehicleBase::StartHandbrake(const FInputActionValue& Value)
+{
+	GetVehicleMovement()->SetHandbrakeInput(true);
+}
+
+void AVehicleBase::StopHandbrake(const FInputActionValue& Value)
+{
+	GetVehicleMovement()->SetHandbrakeInput(false);
+}
 // Called every frame
 void AVehicleBase::Tick(float DeltaTime)
 {
@@ -179,6 +188,12 @@ void AVehicleBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		{
 			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Triggered, this, &AVehicleBase::Brake);
 			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Completed, this, &AVehicleBase::Brake);
+		}
+
+		if(HandbrakeAction)
+		{
+			EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AVehicleBase::StartHandbrake);
+			EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AVehicleBase::StopHandbrake);
 		}
 	}
 }

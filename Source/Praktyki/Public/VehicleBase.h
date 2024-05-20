@@ -14,13 +14,10 @@ class PRAKTYKI_API AVehicleBase : public AWheeledVehiclePawn
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
 	AVehicleBase();
 
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void LapFinished();
@@ -32,18 +29,17 @@ public:
 	uint32 GetCurrentLap() const;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
-	/** Handles steering input */
 	void Steering(const FInputActionValue& Value);
 
-	/** Handles throttle input */
 	void Throttle(const FInputActionValue& Value);
 
-	/** Handles brake input */
 	void Brake(const FInputActionValue& Value);
+
+	void StartHandbrake(const FInputActionValue& Value);
+	void StopHandbrake(const FInputActionValue& Value);
 
 public:
 
@@ -56,6 +52,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
 	class UInputAction* BrakeAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	UInputAction* HandbrakeAction;
 
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Body;
