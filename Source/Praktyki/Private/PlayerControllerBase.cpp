@@ -1,6 +1,5 @@
 // Copyright 2023 Teyon. All Rights Reserved.
 
-
 #include "PlayerControllerBase.h"
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
@@ -12,7 +11,7 @@ void APlayerControllerBase::SetupInputComponent()
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
-		if(InputMappingContext)
+		if (InputMappingContext)
 		{
 			Subsystem->AddMappingContext(InputMappingContext, 0);
 		}
@@ -26,7 +25,7 @@ void APlayerControllerBase::BeginPlay()
 	SetInputMode(FInputModeUIOnly());
 	bShowMouseCursor = true;
 
-	if(MainMenuWidgetClass)
+	if (MainMenuWidgetClass)
 	{
 		MainMenuWidget = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
 		MainMenuWidget->AddToPlayerScreen();
@@ -51,7 +50,7 @@ void APlayerControllerBase::StartRace()
 void APlayerControllerBase::StartCountDown()
 {
 	bShowMouseCursor = false;
-	if(InRaceWidget)
+	if (InRaceWidget)
 	{
 		InRaceWidget->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -69,3 +68,7 @@ float APlayerControllerBase::GetTimeLeftInCountdown() const
 	return 0.f;
 }
 
+void APlayerControllerBase::RaceFinished()
+{
+	SetInputMode(FInputModeUIOnly());
+}

@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include <PlayerControllerBase.h>
 
 // Sets default values
 AVehicleBase::AVehicleBase()
@@ -208,7 +209,6 @@ void AVehicleBase::CheckpointReached(AActor* const CheckpointReached)
 {
 	if (!VisitedCheckpoints.Contains(CheckpointReached))
 	{
-		++NumberOfCheckpointsReached;
 		VisitedCheckpoints.Add(CheckpointReached);
 		UE_LOG(LogTemp, Warning, TEXT("Checkpoint reached valid"));
 	}
@@ -216,10 +216,18 @@ void AVehicleBase::CheckpointReached(AActor* const CheckpointReached)
 
 uint32 AVehicleBase::GetNumberOfCheckpointsReached() const
 {
-	return NumberOfCheckpointsReached;
+	return VisitedCheckpoints.Num();
 }
 
 uint32 AVehicleBase::GetCurrentLap() const
 {
 	return CurrentLap;
+}
+
+void AVehicleBase::RaceFinished()
+{
+	if (APlayerControllerBase* const APlayerController = Cast<APlayerControllerBase>(GetController()))
+	{
+		APlayerController->RaceFinished();
+	}
 }

@@ -7,7 +7,7 @@
 #include "PlayerControllerBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PRAKTYKI_API APlayerControllerBase : public APlayerController
@@ -18,7 +18,9 @@ public:
 	void StartCountDown();
 
 	float GetTimeLeftInCountdown() const;
-	
+
+	void RaceFinished();
+
 protected:
 	virtual void SetupInputComponent() override;
 

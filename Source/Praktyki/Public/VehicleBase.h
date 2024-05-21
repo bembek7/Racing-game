@@ -28,6 +28,8 @@ public:
 
 	uint32 GetCurrentLap() const;
 
+	void RaceFinished();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -168,6 +170,4 @@ private:
 	TArray<AActor*>VisitedCheckpoints;
 
 	uint32 CurrentLap = 0;
-
-	uint32 NumberOfCheckpointsReached = 0;
 };
