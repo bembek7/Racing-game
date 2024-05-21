@@ -21,7 +21,7 @@ public:
 	FText GetCountDownText() const;
 
 	UFUNCTION(BlueprintCallable)
-	FText GetCurrentLapText() const;
+	FText GetLapProgressText() const;
 
 	void RaceStarted();
 
@@ -34,5 +34,5 @@ protected:
 	class UTextBlock* CountDownText;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UTextBlock* CurrentLapText;
+	class UTextBlock* LapProgressText;
 };

@@ -4,12 +4,14 @@
 #include "PlayerControllerBase.h"
 #include "Components/TextBlock.h"
 #include "VehicleBase.h"
+#include "RacingGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 void UInRaceWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	CurrentLapText->SetVisibility(ESlateVisibility::Collapsed);
+	LapProgressText->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 FText UInRaceWidget::GetCountDownText() const
@@ -22,14 +24,18 @@ FText UInRaceWidget::GetCountDownText() const
 	return FText();
 }
 
-FText UInRaceWidget::GetCurrentLapText() const
+FText UInRaceWidget::GetLapProgressText() const
 {
 	if (APlayerControllerBase* const OwningController = Cast<APlayerControllerBase>(GetOwningPlayer()))
 	{
 		if (AVehicleBase* const OwningVehicle = Cast<AVehicleBase>(OwningController->GetPawn()))
 		{
-			const uint32 VehicleCurrentLap = OwningVehicle->GetCurrentLap();
-			return FText::FromString(FString::FromInt(VehicleCurrentLap));
+			if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+			{
+				const uint32 VehicleCurrentLap = OwningVehicle->GetCurrentLap();
+				const uint32 NumberOfLaps = GameMode->GetNumberOfLaps();
+				return FText::FromString(FString::Printf(TEXT("%d/%d"), VehicleCurrentLap, NumberOfLaps));
+			}
 		}
 	}
 	return FText();
@@ -38,5 +44,5 @@ FText UInRaceWidget::GetCurrentLapText() const
 void UInRaceWidget::RaceStarted()
 {
 	CountDownText->SetVisibility(ESlateVisibility::Collapsed);
-	CurrentLapText->SetVisibility(ESlateVisibility::Visible);
+	LapProgressText->SetVisibility(ESlateVisibility::Visible);
 }
