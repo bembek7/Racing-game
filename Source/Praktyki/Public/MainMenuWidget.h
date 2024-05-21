@@ -7,7 +7,7 @@
 #include "MainMenuWidget.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PRAKTYKI_API UMainMenuWidget : public UUserWidget
@@ -23,9 +23,19 @@ private:
 	UFUNCTION()
 	void StartGame();
 
-public:
+	UFUNCTION()
+	void NumberOfLapsChanged();
+
+	UFUNCTION()
+	void RaceModeChanged();
 
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* StartButton;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class USpinBox* NumberOfLaps;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UComboBoxString* RaceMode;
 };
