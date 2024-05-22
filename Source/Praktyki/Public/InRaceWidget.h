@@ -17,17 +17,23 @@ class PRAKTYKI_API UInRaceWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
+	void RaceStarted();
+
+protected:
 	UFUNCTION(BlueprintCallable)
 	FText GetCountDownText() const;
 
 	UFUNCTION(BlueprintCallable)
 	FText GetLapProgressText() const;
 
-	void RaceStarted();
-
-protected:
+	UFUNCTION(BlueprintCallable)
+	FText GetRaceTimerText() const;
 
 private:
+	UFUNCTION()
+	void VisibilityChanged();
+
+	FText TimeToText(const uint32 TimeInHundredthsOfSeconds) const;
 
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
@@ -35,4 +41,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* LapProgressText;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* RaceTimerText;
 };

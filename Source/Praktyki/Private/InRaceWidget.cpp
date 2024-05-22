@@ -12,6 +12,11 @@ void UInRaceWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	LapProgressText->SetVisibility(ESlateVisibility::Collapsed);
+	RaceTimerText->SetVisibility(ESlateVisibility::Collapsed);
+
+	FScriptDelegate OnVisibilityChangedDelegate;
+	OnVisibilityChangedDelegate.BindUFunction(this, FName("VisibilityChanged"));
+	OnVisibilityChanged.AddUnique(OnVisibilityChangedDelegate);
 }
 
 FText UInRaceWidget::GetCountDownText() const
@@ -41,8 +46,56 @@ FText UInRaceWidget::GetLapProgressText() const
 	return FText();
 }
 
+FText UInRaceWidget::TimeToText(const uint32 TimeInHundredthsOfSeconds) const
+{
+	const uint32 HundredthsOfSeconds = TimeInHundredthsOfSeconds % 10;
+	const uint32 TensOfHundredthsOfSeconds = TimeInHundredthsOfSeconds % 100 / 10;
+	const uint32 Seconds = TimeInHundredthsOfSeconds % 1000 / 100;
+	const uint32 TensOfSeconds = TimeInHundredthsOfSeconds % 6000 / 1000;
+	const uint32 Minutes = TimeInHundredthsOfSeconds % 360000 / 6000;
+	const uint32 TensOfMinutes = TimeInHundredthsOfSeconds / 60000;
+	const FString Time = FString::Printf(TEXT("%d%d:%d%d:%d%d"), TensOfMinutes, Minutes, TensOfSeconds, Seconds, TensOfHundredthsOfSeconds, HundredthsOfSeconds);
+	return FText::FromString(Time);
+}
+
+FText UInRaceWidget::GetRaceTimerText() const
+{
+	if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+	{
+		const uint32 RaceTime = GameMode->GetRaceTime();
+		return TimeToText(RaceTime);
+	}
+	return FText();
+}
+
 void UInRaceWidget::RaceStarted()
 {
-	CountDownText->SetVisibility(ESlateVisibility::Collapsed);
-	LapProgressText->SetVisibility(ESlateVisibility::Visible);
+	if(CountDownText)
+	{
+		CountDownText->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	if(LapProgressText)
+	{
+		LapProgressText->SetVisibility(ESlateVisibility::Visible);
+	}
+	if (RaceTimerText)
+	{
+		RaceTimerText->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UInRaceWidget::VisibilityChanged()
+{
+	if (CountDownText)
+	{
+		CountDownText->SetVisibility(ESlateVisibility::Visible);
+	}
+	if (LapProgressText)
+	{
+		LapProgressText->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	if (RaceTimerText)
+	{
+		RaceTimerText->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
