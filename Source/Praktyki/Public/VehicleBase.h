@@ -16,10 +16,6 @@ class PRAKTYKI_API AVehicleBase : public AWheeledVehiclePawn
 public:
 	AVehicleBase();
 
-	virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	void LapFinished();
 
 	void CheckpointReached(AActor* const CheckpointReached);
@@ -28,39 +24,13 @@ public:
 
 	uint32 GetCurrentLap() const;
 
-	void RaceFinished();
+	virtual void RaceFinished();
 
 	void RaceStarts();
 
 	TArray<uint32> GetLapTimes() const;
-protected:
-	virtual void BeginPlay() override;
-
-private:
-	void Steering(const FInputActionValue& Value);
-
-	void Throttle(const FInputActionValue& Value);
-
-	void Brake(const FInputActionValue& Value);
-
-	void StartHandbrake(const FInputActionValue& Value);
-	void StopHandbrake(const FInputActionValue& Value);
-
-public:
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* SteeringAction;
-
-	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* ThrottleAction;
-
-	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* BrakeAction;
-
-	UPROPERTY(EditDefaultsOnly, Category = Input)
-	UInputAction* HandbrakeAction;
-
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Body;
 
@@ -162,12 +132,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Wiper;
-
-	UPROPERTY(EditDefaultsOnly)
-	class UCameraComponent* Camera;
-
-	UPROPERTY(EditDefaultsOnly)
-	class USpringArmComponent* SpringArm;
 
 private:
 	TArray<AActor*>VisitedCheckpoints;

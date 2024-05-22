@@ -1,18 +1,9 @@
 // Copyright 2023 Teyon. All Rights Reserved.
 
 #include "VehicleBase.h"
-#include "Camera/CameraComponent.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "ChaosWheeledVehicleMovementComponent.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
-#include "InputActionValue.h"
-#include <PlayerControllerBase.h>
 
-// Sets default values
 AVehicleBase::AVehicleBase()
 {
-	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(FName("Body"));
@@ -116,87 +107,6 @@ AVehicleBase::AVehicleBase()
 
 	Wiper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Wiper"));
 	Wiper->SetupAttachment(GetMesh(), FName("hood_front"));
-
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(FName("Spring Arm"));
-	SpringArm->SetupAttachment(GetRootComponent());
-
-	Camera = CreateDefaultSubobject<UCameraComponent>(FName("Camera"));
-	Camera->SetupAttachment(SpringArm);
-}
-
-// Called when the game starts or when spawned
-void AVehicleBase::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void AVehicleBase::Steering(const FInputActionValue& Value)
-{
-	const float SteeringValue = Value.Get<float>();
-
-	GetVehicleMovement()->SetSteeringInput(SteeringValue);
-}
-
-void AVehicleBase::Throttle(const FInputActionValue& Value)
-{
-	const float ThrottleValue = Value.Get<float>();
-
-	GetVehicleMovement()->SetThrottleInput(ThrottleValue);
-}
-
-void AVehicleBase::Brake(const FInputActionValue& Value)
-{
-	const float BreakValue = Value.Get<float>();
-
-	GetVehicleMovement()->SetBrakeInput(BreakValue);
-}
-
-void AVehicleBase::StartHandbrake(const FInputActionValue& Value)
-{
-	GetVehicleMovement()->SetHandbrakeInput(true);
-}
-
-void AVehicleBase::StopHandbrake(const FInputActionValue& Value)
-{
-	GetVehicleMovement()->SetHandbrakeInput(false);
-}
-// Called every frame
-void AVehicleBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-// Called to bind functionality to input
-void AVehicleBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		if (SteeringAction)
-		{
-			EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Triggered, this, &AVehicleBase::Steering);
-			EnhancedInputComponent->BindAction(SteeringAction, ETriggerEvent::Completed, this, &AVehicleBase::Steering);
-		}
-
-		if (ThrottleAction)
-		{
-			EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Triggered, this, &AVehicleBase::Throttle);
-			EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Completed, this, &AVehicleBase::Throttle);
-		}
-
-		if (BrakeAction)
-		{
-			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Triggered, this, &AVehicleBase::Brake);
-			EnhancedInputComponent->BindAction(BrakeAction, ETriggerEvent::Completed, this, &AVehicleBase::Brake);
-		}
-
-		if(HandbrakeAction)
-		{
-			EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &AVehicleBase::StartHandbrake);
-			EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &AVehicleBase::StopHandbrake);
-		}
-	}
 }
 
 void AVehicleBase::LapFinished()
@@ -228,10 +138,7 @@ uint32 AVehicleBase::GetCurrentLap() const
 
 void AVehicleBase::RaceFinished()
 {
-	if (APlayerControllerBase* const APlayerController = Cast<APlayerControllerBase>(GetController()))
-	{
-		APlayerController->RaceFinished();
-	}
+	;
 }
 
 void AVehicleBase::RaceStarts()
