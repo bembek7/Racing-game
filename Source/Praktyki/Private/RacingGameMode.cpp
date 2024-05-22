@@ -20,7 +20,7 @@ void ARacingGameMode::VehicleCrossedFinishLine(AVehicleBase* const VehicleThatCr
 		VehicleThatCrossed->LapFinished();
 		if (VehicleThatCrossed->GetCurrentLap() > NumberOfLaps)
 		{
-
+			VehicleThatCrossed->RaceFinished();
 		}
 	}
 }
@@ -61,6 +61,29 @@ void ARacingGameMode::SetRaceModeFromString(const FString& RaceModeName)
 	{
 		NumberOfLaps = 1;
 	}
+}
+
+void ARacingGameMode::RaceStarts()
+{
+	CurrentRaceTime = 0;
+	RaceTimer.Invalidate();
+	GetWorldTimerManager().SetTimer(RaceTimer, [this]() { ++CurrentRaceTime; }, 0.01f, true); // Could just set the timer, but I think it's easier this way
+
+	// We are calling it on every vehicle in case there are more vehicles in the future
+	TArray<AActor*>Vehicles;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AVehicleBase::StaticClass(), Vehicles);
+	for (auto const Vehicle : Vehicles)
+	{
+		if (AVehicleBase* const VehicleFound = Cast<AVehicleBase>(Vehicle))
+		{
+			VehicleFound->RaceStarts();
+		}
+	}
+}
+
+uint32 ARacingGameMode::GetRaceTime() const
+{
+	return CurrentRaceTime;
 }
 
 void ARacingGameMode::BeginPlay()

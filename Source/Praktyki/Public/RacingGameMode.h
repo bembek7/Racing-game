@@ -34,12 +34,19 @@ public:
 
 	void SetRaceModeFromString(const FString& RaceModeName);
 
+	void RaceStarts();
+
+	uint32 GetRaceTime() const;
+
 protected:
 	virtual void BeginPlay() override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AActor> CheckpointClass;
+
+private:
+	FTimerHandle RaceTimer;
 
 	uint32 NumberOfCheckpoints = 0;
 
@@ -48,4 +55,6 @@ protected:
 	uint32 NumberOfLaps = 1;
 
 	TMap<ERaceMode, FString> RaceModesNamesMap;
+
+	uint32 CurrentRaceTime = 0; //Hundredths of second
 };

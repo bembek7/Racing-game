@@ -203,6 +203,8 @@ void AVehicleBase::LapFinished()
 {
 	++CurrentLap;
 	VisitedCheckpoints.Empty();
+	LapTimes.Add(CurrentLapTime);
+	CurrentLapTime = 0;
 }
 
 void AVehicleBase::CheckpointReached(AActor* const CheckpointReached)
@@ -230,4 +232,20 @@ void AVehicleBase::RaceFinished()
 	{
 		APlayerController->RaceFinished();
 	}
+}
+
+void AVehicleBase::RaceStarts()
+{
+	VisitedCheckpoints.Empty();
+	LapTimes.Empty();
+	CurrentLap = 1;
+
+	CurrentLapTime = 0;
+	LapTimer.Invalidate();
+	GetWorldTimerManager().SetTimer(LapTimer, [this]() { ++CurrentLapTime; }, 0.01f, true); // Could just set the timer, but I think it's easier this way
+}
+
+TArray<uint32> AVehicleBase::GetLapTimes() const
+{
+	return LapTimes;
 }

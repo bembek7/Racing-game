@@ -4,6 +4,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "InRaceWidget.h"
+#include "RacingGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 void APlayerControllerBase::SetupInputComponent()
 {
@@ -38,6 +40,13 @@ void APlayerControllerBase::BeginPlay()
 		InRaceWidget->AddToPlayerScreen();
 		InRaceWidget->SetVisibility(ESlateVisibility::Collapsed);
 	}
+
+	if (RaceFinishedWidgetClass)
+	{
+		RaceFinishedWidget = CreateWidget<UUserWidget>(this, RaceFinishedWidgetClass);
+		RaceFinishedWidget->AddToPlayerScreen();
+		RaceFinishedWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void APlayerControllerBase::StartRace()
@@ -45,6 +54,11 @@ void APlayerControllerBase::StartRace()
 	SetInputMode(FInputModeGameOnly());
 
 	InRaceWidget->RaceStarted();
+
+	if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+	{
+		GameMode->RaceStarts();
+	}
 }
 
 void APlayerControllerBase::StartCountDown()
@@ -70,5 +84,22 @@ float APlayerControllerBase::GetTimeLeftInCountdown() const
 
 void APlayerControllerBase::RaceFinished()
 {
+	if (InRaceWidget)
+	{
+		InRaceWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
 	SetInputMode(FInputModeUIOnly());
+	bShowMouseCursor = true;
+	if (RaceFinishedWidget)
+	{
+		RaceFinishedWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void APlayerControllerBase::ShowMainMenu()
+{
+	if (MainMenuWidget)
+	{
+		MainMenuWidget->SetVisibility(ESlateVisibility::Visible);
+	}
 }

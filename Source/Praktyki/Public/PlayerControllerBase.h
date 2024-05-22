@@ -21,6 +21,8 @@ public:
 
 	void RaceFinished();
 
+	void ShowMainMenu();
+
 protected:
 	virtual void SetupInputComponent() override;
 
@@ -40,9 +42,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget>InRaceWidgetClass;
 
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget>RaceFinishedWidgetClass;
+
 private:
 	const float TimeToRaceStart = 3.f;
 	FTimerHandle CountDownHandle;
 	class UInRaceWidget* InRaceWidget;
 	UUserWidget* MainMenuWidget;
+	UUserWidget* RaceFinishedWidget;
 };

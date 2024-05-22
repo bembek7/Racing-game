@@ -30,6 +30,9 @@ public:
 
 	void RaceFinished();
 
+	void RaceStarts();
+
+	TArray<uint32> GetLapTimes() const;
 protected:
 	virtual void BeginPlay() override;
 
@@ -169,5 +172,11 @@ protected:
 private:
 	TArray<AActor*>VisitedCheckpoints;
 
-	uint32 CurrentLap = 0;
+	uint32 CurrentLap = 1;
+
+	uint32 CurrentLapTime = 0; // Hundredths of second
+
+	TArray<uint32>LapTimes;
+
+	FTimerHandle LapTimer;
 };
