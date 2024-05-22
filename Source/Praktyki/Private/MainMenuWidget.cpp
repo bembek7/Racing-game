@@ -31,6 +31,13 @@ void UMainMenuWidget::NativeConstruct()
 		RaceMode->OnSelectionChanged.AddUnique(GameModeChangedDelegate);
 	}
 
+	FScriptDelegate QuitDelegate;
+	QuitDelegate.BindUFunction(this, FName("QuitGame"));
+	if (QuitButton)
+	{
+		QuitButton->OnClicked.AddUnique(QuitDelegate);
+	}
+
 	if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
 	{
 		if (NumberOfLaps)
@@ -78,5 +85,13 @@ void UMainMenuWidget::RaceModeChanged()
 			NumberOfLaps->SetIsEnabled(GameMode->IsNumberOfLapsChangable());
 			NumberOfLaps->SetValue(GameMode->GetNumberOfLaps());
 		}
+	}
+}
+
+void UMainMenuWidget::QuitGame() const
+{
+	if (APlayerController* OwiningPlayer = GetOwningPlayer())
+	{
+		UKismetSystemLibrary::QuitGame(GetWorld(), OwiningPlayer, EQuitPreference::Quit, false);
 	}
 }

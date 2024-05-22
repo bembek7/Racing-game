@@ -29,9 +29,15 @@ private:
 	UFUNCTION()
 	void RaceModeChanged();
 
+	UFUNCTION()
+	void QuitGame() const;
+
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* StartButton;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UButton* QuitButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class USpinBox* NumberOfLaps;
