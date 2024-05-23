@@ -21,12 +21,12 @@ APlayerVehicle::APlayerVehicle()
 	FrontCamera = CreateDefaultSubobject<UCameraComponent>(FName("Front Camera"));
 	FrontCamera->SetupAttachment(GetMesh(), FName("HoodGameplayCamera"));
 
-	FrontCamera->SetActive(false);
-
 	CarInteriorCamera = CreateDefaultSubobject<UCameraComponent>(FName("Car Interior Camera"));
 	CarInteriorCamera->SetupAttachment(GetMesh(), FName("CarInteriorGameplayCamera"));
 
-	CarInteriorCamera->SetActive(true);
+	Cameras.Add(CameraFromAbove);
+	Cameras.Add(FrontCamera);
+	Cameras.Add(CarInteriorCamera);
 }
 
 void APlayerVehicle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -58,7 +58,35 @@ void APlayerVehicle::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 			EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Started, this, &APlayerVehicle::StartHandbrake);
 			EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &APlayerVehicle::StopHandbrake);
 		}
+
+		if (SwitchToNextCameraAction)
+		{
+			EnhancedInputComponent->BindAction(SwitchToNextCameraAction, ETriggerEvent::Started, this, &APlayerVehicle::SwitchToNextCamera);
+		}
+
+		if (SwitchToCameraFromAboveAction)
+		{
+			EnhancedInputComponent->BindAction(SwitchToCameraFromAboveAction, ETriggerEvent::Started, this, &APlayerVehicle::SwitchToCameraFromAbove);
+		}
+
+		if (SwitchToFrontCameraAction)
+		{
+			EnhancedInputComponent->BindAction(SwitchToFrontCameraAction, ETriggerEvent::Started, this, &APlayerVehicle::SwitchToFrontCamera);
+		}
+
+		if (SwitchToCarInteriorCameraAction)
+		{
+			EnhancedInputComponent->BindAction(SwitchToCarInteriorCameraAction, ETriggerEvent::Started, this, &APlayerVehicle::SwitchToCarInteriorCamera);
+		}
 	}
+}
+
+void APlayerVehicle::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CarInteriorCamera->SetActive(false);
+	FrontCamera->SetActive(false);
 }
 
 void APlayerVehicle::Steering(const FInputActionValue& Value)
@@ -92,10 +120,94 @@ void APlayerVehicle::StopHandbrake(const FInputActionValue& Value)
 	GetVehicleMovement()->SetHandbrakeInput(false);
 }
 
+void APlayerVehicle::SwitchToNextCamera()
+{
+	if (Cameras[CurrentCameraIndex])
+	{
+		Cameras[CurrentCameraIndex]->SetActive(false);
+	}
+
+	++CurrentCameraIndex;
+	if (CurrentCameraIndex == Cameras.Num())
+	{
+		CurrentCameraIndex = 0;
+	}
+	
+	if (Cameras[CurrentCameraIndex])
+	{
+		Cameras[CurrentCameraIndex]->SetActive(true);
+	}
+}
+
+void APlayerVehicle::SwitchToCameraFromAbove()
+{
+	SwitchToCamera(CameraFromAbove);
+}
+
+void APlayerVehicle::SwitchToFrontCamera()
+{
+	SwitchToCamera(FrontCamera);
+}
+
+void APlayerVehicle::SwitchToCarInteriorCamera()
+{
+	SwitchToCamera(CarInteriorCamera);
+}
+
+void APlayerVehicle::SwitchToCamera(UCameraComponent* const CameraToSwitchOn)
+{
+	if (CameraToSwitchOn)
+	{
+		if (Cameras[CurrentCameraIndex])
+		{
+			Cameras[CurrentCameraIndex]->SetActive(false);
+		}
+
+		int32 CameraIndex;
+		if (Cameras.Find(CameraToSwitchOn, CameraIndex))
+		{
+			CurrentCameraIndex = CameraIndex;
+		}
+		CameraToSwitchOn->SetActive(true);
+	}
+}
+
+void APlayerVehicle::RotateSteeringWheelToMatchWheels()
+{
+	if (GetMesh())
+	{
+		float WheelYaw = GetMesh()->GetSocketTransform(FName("suspension_front_right"), ERelativeTransformSpace::RTS_ParentBoneSpace).Rotator().Yaw;
+		if (WheelYaw < -120)
+		{
+			WheelYaw += 180;
+		}
+		else
+		{
+			if (WheelYaw > 120)
+			{
+				WheelYaw -= 180;
+			}
+		}
+		const float SteeringWheelRoatation = FMath::GetMappedRangeValueClamped(FVector2D(-55.0f, 55.0f), FVector2D(-90.0f, 90.0f), WheelYaw);
+		
+		if (SteeringWheel)
+		{
+			SteeringWheel->SetRelativeRotation(FRotator(0.f, 0.f, SteeringWheelRoatation));
+		}
+	}
+}
+
 void APlayerVehicle::RaceFinished()
 {
 	if (APlayerControllerBase* const PlayerController = Cast<APlayerControllerBase>(GetController()))
 	{
 		PlayerController->RaceFinished();
 	}
+}
+
+void APlayerVehicle::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	RotateSteeringWheelToMatchWheels();
 }

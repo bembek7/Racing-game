@@ -102,7 +102,7 @@ AVehicleBase::AVehicleBase()
 	SeatNetClamps = CreateDefaultSubobject<UStaticMeshComponent>(FName("Seat Net Clamps"));
 	SeatNetClamps->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
 
-	SteeringWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("SteeringWheel"));
+	SteeringWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Steering Wheel"));
 	SteeringWheel->SetupAttachment(GetMesh(), FName("hood_front"));
 
 	Wiper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Wiper"));

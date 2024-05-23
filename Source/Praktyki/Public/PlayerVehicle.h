@@ -21,6 +21,10 @@ public:
 
 	virtual void RaceFinished() override;
 
+	virtual void Tick(float DeltaTime) override;
+protected:
+	virtual void BeginPlay() override;
+		
 private:
 	void Steering(const FInputActionValue& Value);
 
@@ -30,6 +34,15 @@ private:
 
 	void StartHandbrake(const FInputActionValue& Value);
 	void StopHandbrake(const FInputActionValue& Value);
+
+	void SwitchToNextCamera();
+
+	void SwitchToCameraFromAbove();
+	void SwitchToFrontCamera();
+	void SwitchToCarInteriorCamera();
+	void SwitchToCamera(class UCameraComponent* const CameraToSwitchOn);
+
+	void RotateSteeringWheelToMatchWheels();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Input)
@@ -42,7 +55,19 @@ protected:
 	class UInputAction* BrakeAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	UInputAction* HandbrakeAction;
+	class UInputAction* HandbrakeAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	class UInputAction* SwitchToNextCameraAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	class UInputAction* SwitchToCameraFromAboveAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	class UInputAction* SwitchToFrontCameraAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	class UInputAction* SwitchToCarInteriorCameraAction;
 
 	UPROPERTY(EditDefaultsOnly)
 	class UCameraComponent* CameraFromAbove;
@@ -55,4 +80,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	class USpringArmComponent* SpringArm;
+
+private:
+	TArray<UCameraComponent*> Cameras;
+	uint32 CurrentCameraIndex = 0;
 };
