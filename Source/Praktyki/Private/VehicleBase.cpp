@@ -1,6 +1,7 @@
 // Copyright 2023 Teyon. All Rights Reserved.
 
 #include "VehicleBase.h"
+#include "ChaosWheeledVehicleMovementComponent.h"
 
 AVehicleBase::AVehicleBase()
 {
@@ -122,7 +123,6 @@ void AVehicleBase::CheckpointReached(AActor* const CheckpointReached)
 	if (!VisitedCheckpoints.Contains(CheckpointReached))
 	{
 		VisitedCheckpoints.Add(CheckpointReached);
-		UE_LOG(LogTemp, Warning, TEXT("Checkpoint reached valid"));
 	}
 }
 
@@ -138,11 +138,13 @@ uint32 AVehicleBase::GetCurrentLap() const
 
 void AVehicleBase::RaceFinished()
 {
-	;
+	bBlockThrottle = true;
 }
 
 void AVehicleBase::RaceStarts()
 {
+	bBlockThrottle = false;
+
 	VisitedCheckpoints.Empty();
 	LapTimes.Empty();
 	CurrentLap = 1;
@@ -155,4 +157,10 @@ void AVehicleBase::RaceStarts()
 TArray<uint32> AVehicleBase::GetLapTimes() const
 {
 	return LapTimes;
+}
+
+void AVehicleBase::TeleportVehicleToStartingPosition(const FTransform& StartingPosition)
+{
+	TeleportTo(StartingPosition.GetLocation(), StartingPosition.Rotator());
+	GetVehicleMovement()->StopMovementImmediately();
 }

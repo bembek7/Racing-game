@@ -7,7 +7,7 @@
 #include "PlayerVehicle.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PRAKTYKI_API APlayerVehicle : public AVehicleBase
@@ -24,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 protected:
 	virtual void BeginPlay() override;
-		
+
 private:
 	void Steering(const FInputActionValue& Value);
 

@@ -42,7 +42,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget>InRaceWidgetClass;
 
-
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget>RaceFinishedWidgetClass;
 

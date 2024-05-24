@@ -3,7 +3,7 @@
 #include "RacingGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "VehicleBase.h"
-
+#include "StartingPosition.h"
 
 ARacingGameMode::ARacingGameMode()
 {
@@ -11,12 +11,46 @@ ARacingGameMode::ARacingGameMode()
 	RaceModesNamesMap.Emplace(ERaceMode::Race, TEXT("Race"));
 }
 
+void ARacingGameMode::BeginPlay()
+{
+	TArray<AActor*>CheckpointsFound;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), CheckpointClass, CheckpointsFound);
+	NumberOfCheckpoints = CheckpointsFound.Num();
+
+	GenerateStartingPostionsForVehicles();
+}
+
+void ARacingGameMode::GenerateStartingPostionsForVehicles()
+{
+	TArray<AActor*>StartingPositions;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStartingPosition::StaticClass(), StartingPositions);
+	TArray<AActor*>Vehicles;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AVehicleBase::StaticClass(), Vehicles);
+	uint32 VehicleIndex = 0;
+	for (auto const StartingPosition : StartingPositions)
+	{
+		if (VehicleIndex == Vehicles.Num())
+		{
+			break;
+		}
+		if (AStartingPosition* const StartingPositionCasted = Cast<AStartingPosition>(StartingPosition))
+		{
+			if (StartingPositionCasted->GetStartingPlace() <= Vehicles.Num())
+			{
+				if (Vehicles[VehicleIndex])
+				{
+					VehiclesStartingPostions.Add(Vehicles[VehicleIndex], StartingPositionCasted->GetActorTransform());
+					++VehicleIndex;
+				}
+			}
+		}
+	}
+}
+
 void ARacingGameMode::VehicleCrossedFinishLine(AVehicleBase* const VehicleThatCrossed) const
 {
-	UE_LOG(LogTemp, Warning, TEXT("Finish reached"));
 	if (VehicleThatCrossed && VehicleThatCrossed->GetNumberOfCheckpointsReached() == NumberOfCheckpoints)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Finish reached valid"));
 		VehicleThatCrossed->LapFinished();
 		if (VehicleThatCrossed->GetCurrentLap() > NumberOfLaps)
 		{
@@ -86,9 +120,13 @@ uint32 ARacingGameMode::GetRaceTime() const
 	return CurrentRaceTime;
 }
 
-void ARacingGameMode::BeginPlay()
+void ARacingGameMode::SetVehiclesOnStartingPositions()
 {
-	TArray<AActor*>CheckpointsFound;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), CheckpointClass, CheckpointsFound);
-	NumberOfCheckpoints = CheckpointsFound.Num();
+	for (const auto& VehiclePostion : VehiclesStartingPostions)
+	{
+		if (AVehicleBase* const Vehicle = Cast<AVehicleBase>(VehiclePostion.Key))
+		{
+			Vehicle->TeleportVehicleToStartingPosition(VehiclePostion.Value);
+		}
+	}
 }

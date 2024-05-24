@@ -30,6 +30,8 @@ public:
 
 	TArray<uint32> GetLapTimes() const;
 
+	void TeleportVehicleToStartingPosition(const FTransform& StartingPosition);
+
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Body;
@@ -132,6 +134,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Wiper;
+
+	bool bBlockThrottle = true;
 
 private:
 	TArray<AActor*>VisitedCheckpoints;

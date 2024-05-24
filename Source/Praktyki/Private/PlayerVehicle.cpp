@@ -1,6 +1,5 @@
 // Copyright 2023 Teyon. All Rights Reserved.
 
-
 #include "PlayerVehicle.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -98,9 +97,15 @@ void APlayerVehicle::Steering(const FInputActionValue& Value)
 
 void APlayerVehicle::Throttle(const FInputActionValue& Value)
 {
-	const float ThrottleValue = Value.Get<float>();
+	float ThrottleValue = Value.Get<float>();
+
+	if (bBlockThrottle)
+	{
+		ThrottleValue = 0.f;
+	}
 
 	GetVehicleMovement()->SetThrottleInput(ThrottleValue);
+	UE_LOG(LogTemp, Warning, TEXT("Throttle input: %f"), ThrottleValue);
 }
 
 void APlayerVehicle::Brake(const FInputActionValue& Value)
@@ -132,7 +137,7 @@ void APlayerVehicle::SwitchToNextCamera()
 	{
 		CurrentCameraIndex = 0;
 	}
-	
+
 	if (Cameras[CurrentCameraIndex])
 	{
 		Cameras[CurrentCameraIndex]->SetActive(true);
@@ -189,7 +194,7 @@ void APlayerVehicle::RotateSteeringWheelToMatchWheels()
 			}
 		}
 		const float SteeringWheelRoatation = FMath::GetMappedRangeValueClamped(FVector2D(-55.0f, 55.0f), FVector2D(-90.0f, 90.0f), WheelYaw);
-		
+
 		if (SteeringWheel)
 		{
 			SteeringWheel->SetRelativeRotation(FRotator(0.f, 0.f, SteeringWheelRoatation));
@@ -199,6 +204,8 @@ void APlayerVehicle::RotateSteeringWheelToMatchWheels()
 
 void APlayerVehicle::RaceFinished()
 {
+	Super::RaceFinished();
+
 	if (APlayerControllerBase* const PlayerController = Cast<APlayerControllerBase>(GetController()))
 	{
 		PlayerController->RaceFinished();

@@ -25,7 +25,6 @@ void APlayerControllerBase::BeginPlay()
 	Super::BeginPlay();
 
 	SetInputMode(FInputModeUIOnly());
-	bShowMouseCursor = true;
 
 	if (MainMenuWidgetClass)
 	{
@@ -51,8 +50,6 @@ void APlayerControllerBase::BeginPlay()
 
 void APlayerControllerBase::StartRace()
 {
-	SetInputMode(FInputModeGameOnly());
-
 	InRaceWidget->RaceStarted();
 
 	if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
@@ -63,7 +60,9 @@ void APlayerControllerBase::StartRace()
 
 void APlayerControllerBase::StartCountDown()
 {
+	SetInputMode(FInputModeGameOnly());
 	bShowMouseCursor = false;
+
 	if (InRaceWidget)
 	{
 		InRaceWidget->SetVisibility(ESlateVisibility::Visible);
@@ -71,6 +70,11 @@ void APlayerControllerBase::StartCountDown()
 	FTimerDelegate CountDownFinishedDelegate;
 	CountDownFinishedDelegate.BindUFunction(this, FName("StartRace"));
 	GetWorldTimerManager().SetTimer(CountDownHandle, CountDownFinishedDelegate, TimeToRaceStart, false);
+
+	if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+	{
+		GameMode->SetVehiclesOnStartingPositions();
+	}
 }
 
 float APlayerControllerBase::GetTimeLeftInCountdown() const
@@ -88,8 +92,10 @@ void APlayerControllerBase::RaceFinished()
 	{
 		InRaceWidget->SetVisibility(ESlateVisibility::Collapsed);
 	}
+
 	SetInputMode(FInputModeUIOnly());
 	bShowMouseCursor = true;
+
 	if (RaceFinishedWidget)
 	{
 		RaceFinishedWidget->SetVisibility(ESlateVisibility::Visible);

@@ -38,8 +38,13 @@ public:
 
 	uint32 GetRaceTime() const;
 
+	void SetVehiclesOnStartingPositions();
+
 protected:
 	virtual void BeginPlay() override;
+
+private:
+	void GenerateStartingPostionsForVehicles();
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -55,6 +60,8 @@ private:
 	uint32 NumberOfLaps = 1;
 
 	TMap<ERaceMode, FString> RaceModesNamesMap;
+
+	TMap<AActor*, FTransform> VehiclesStartingPostions;
 
 	uint32 CurrentRaceTime = 0; //Hundredths of second
 };
