@@ -135,6 +135,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Wiper;
 
+	UPROPERTY(EditDefaultsOnly)
+	class USceneCaptureComponent2D* RearMirrorsSceneCapture;
+
 	bool bBlockThrottle = true;
 
 private:

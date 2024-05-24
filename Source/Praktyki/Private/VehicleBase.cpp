@@ -2,6 +2,7 @@
 
 #include "VehicleBase.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
+#include "Components/SceneCaptureComponent2D.h"
 
 AVehicleBase::AVehicleBase()
 {
@@ -86,16 +87,16 @@ AVehicleBase::AVehicleBase()
 	AccelerationPedal->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
 
 	LeftRearBrakeDisc = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Rear Brake Disc"));
-	LeftRearBrakeDisc->SetupAttachment(GetMesh(), FName("wheel_back_left_spin"));
+	LeftRearBrakeDisc->SetupAttachment(GetMesh(), FName("suspension_back_left"));
 
 	RightRearBrakeDisc = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Rear Brake Disc"));
-	RightRearBrakeDisc->SetupAttachment(GetMesh(), FName("wheel_back_right_spin"));
+	RightRearBrakeDisc->SetupAttachment(GetMesh(), FName("suspension_back_right"));
 
 	LeftFrontBrakeDisc = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Front Brake Disc"));
-	LeftFrontBrakeDisc->SetupAttachment(GetMesh(), FName("wheel_front_left_spin"));
+	LeftFrontBrakeDisc->SetupAttachment(GetMesh(), FName("suspension_front_left"));
 
 	RightFrontBrakeDisc = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Front Brake Disc"));
-	RightFrontBrakeDisc->SetupAttachment(GetMesh(), FName("wheel_front_right_spin"));
+	RightFrontBrakeDisc->SetupAttachment(GetMesh(), FName("suspension_front_right"));
 
 	RearDiffuser = CreateDefaultSubobject<UStaticMeshComponent>(FName("Rear Diffuser"));
 	RearDiffuser->SetupAttachment(GetMesh(), FName("diffuser_back"));
@@ -108,6 +109,9 @@ AVehicleBase::AVehicleBase()
 
 	Wiper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Wiper"));
 	Wiper->SetupAttachment(GetMesh(), FName("hood_front"));
+
+	RearMirrorsSceneCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(FName("Rear Mirrors Scene Capture"));
+	RearMirrorsSceneCapture->SetupAttachment(GetMesh(), FName("RearMirrorsSceneCapture"));
 }
 
 void AVehicleBase::LapFinished()
