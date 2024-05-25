@@ -25,6 +25,7 @@ void APlayerControllerBase::BeginPlay()
 	Super::BeginPlay();
 
 	SetInputMode(FInputModeUIOnly());
+	bShowMouseCursor = true;
 
 	if (MainMenuWidgetClass)
 	{
@@ -92,7 +93,6 @@ void APlayerControllerBase::RaceFinished()
 	{
 		InRaceWidget->SetVisibility(ESlateVisibility::Collapsed);
 	}
-
 	SetInputMode(FInputModeUIOnly());
 	bShowMouseCursor = true;
 
