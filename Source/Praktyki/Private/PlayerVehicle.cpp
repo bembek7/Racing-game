@@ -99,19 +99,22 @@ void APlayerVehicle::Throttle(const FInputActionValue& Value)
 {
 	float ThrottleValue = Value.Get<float>();
 
-	if (bBlockThrottle)
+	if (bBlockEngineInput)
 	{
 		ThrottleValue = 0.f;
 	}
 
 	GetVehicleMovement()->SetThrottleInput(ThrottleValue);
-	UE_LOG(LogTemp, Warning, TEXT("Throttle input: %f"), ThrottleValue);
 }
 
 void APlayerVehicle::Brake(const FInputActionValue& Value)
 {
-	const float BreakValue = Value.Get<float>();
+	float BreakValue = Value.Get<float>();
 
+	if (bBlockEngineInput)
+	{
+		BreakValue = 0.f;
+	}
 	GetVehicleMovement()->SetBrakeInput(BreakValue);
 }
 
