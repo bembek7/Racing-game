@@ -112,6 +112,42 @@ AVehicleBase::AVehicleBase()
 
 	RearMirrorsSceneCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(FName("Rear Mirrors Scene Capture"));
 	RearMirrorsSceneCapture->SetupAttachment(GetMesh(), FName("RearMirrorsSceneCapture"));
+
+	LiveryColorsStringMap.Emplace(TEXT("White"), ELiveryColor::White);
+	LiveryColorsStringMap.Emplace(TEXT("Orange"), ELiveryColor::Orange);
+	LiveryColorsStringMap.Emplace(TEXT("Yellow"), ELiveryColor::Yellow);
+	LiveryColorsStringMap.Emplace(TEXT("Black"), ELiveryColor::Black);
+	LiveryColorsStringMap.Emplace(TEXT("Default"), ELiveryColor::Default);
+}
+
+
+void AVehicleBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	const FName LiverySlotName = FName("Livery");
+
+	UMaterialInterface* const OrignalLiveryMaterial = Body->GetMaterialByName(LiverySlotName);
+	if (OrignalLiveryMaterial)
+	{
+		DynamicLiveryMaterial = UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this);
+	}
+
+	if (DynamicLiveryMaterial)
+	{
+		Body->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		FrontBumper->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		LeftDoor->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		RightDoor->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		RearBumper->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		RearBoot->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		BackSpoiler->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		LeftWingMirror->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		RightWingMirror->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		LeftFender->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		RightFender->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		FrontHood->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+	}
 }
 
 void AVehicleBase::LapFinished()
@@ -142,12 +178,12 @@ uint32 AVehicleBase::GetCurrentLap() const
 
 void AVehicleBase::RaceFinished()
 {
-	bBlockThrottle = true;
+	bBlockEngineInput = true;
 }
 
 void AVehicleBase::RaceStarts()
 {
-	bBlockThrottle = false;
+	bBlockEngineInput = false;
 
 	VisitedCheckpoints.Empty();
 	LapTimes.Empty();
@@ -167,4 +203,35 @@ void AVehicleBase::TeleportVehicleToStartingPosition(const FTransform& StartingP
 {
 	TeleportTo(StartingPosition.GetLocation(), StartingPosition.Rotator());
 	GetVehicleMovement()->StopMovementImmediately();
+}
+
+void AVehicleBase::SetAlbedoColorOnLiveryMaterial(const FString& NewLiveryColor)
+{
+	const ELiveryColor ChosenColor = *LiveryColorsStringMap.Find(NewLiveryColor);
+	
+	if(DynamicLiveryMaterial)
+	{
+		UTexture* ChosenTexture;
+		switch (ChosenColor)
+		{
+		case White:
+			ChosenTexture = LiveryColorWhite;
+			break;
+		case Orange:
+			ChosenTexture = LiveryColorOrange;
+			break;
+		case Yellow:
+			ChosenTexture = LiveryColorYellow;
+			break;
+		case Black:
+			ChosenTexture = LiveryColorBlack;
+			break;
+		default:
+			ChosenTexture = LiveryColorDefault;
+		}
+		if(ChosenTexture)
+		{
+			DynamicLiveryMaterial->SetTextureParameterValue(FName("Albedo"), ChosenTexture);
+		}
+	}
 }

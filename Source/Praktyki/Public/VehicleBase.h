@@ -8,6 +8,15 @@
 
 struct FInputActionValue;
 
+UENUM()
+enum ELiveryColor : uint8 {
+	White,
+	Orange,
+	Yellow,
+	Black,
+	Default
+};
+
 UCLASS()
 class PRAKTYKI_API AVehicleBase : public AWheeledVehiclePawn
 {
@@ -31,6 +40,11 @@ public:
 	TArray<uint32> GetLapTimes() const;
 
 	void TeleportVehicleToStartingPosition(const FTransform& StartingPosition);
+
+	void SetAlbedoColorOnLiveryMaterial(const FString& NewLiveryColor);
+
+protected:
+	virtual void BeginPlay() override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -138,9 +152,28 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	class USceneCaptureComponent2D* RearMirrorsSceneCapture;
 
-	bool bBlockThrottle = true;
+	UPROPERTY(EditDefaultsOnly)
+	UTexture* LiveryColorDefault;
+
+	UPROPERTY(EditDefaultsOnly)
+	UTexture* LiveryColorWhite;
+
+	UPROPERTY(EditDefaultsOnly)
+	UTexture* LiveryColorOrange;
+
+	UPROPERTY(EditDefaultsOnly)
+	UTexture* LiveryColorBlack;
+
+	UPROPERTY(EditDefaultsOnly)
+	UTexture* LiveryColorYellow;
+
+	bool bBlockEngineInput = true;
 
 private:
+	UMaterialInstanceDynamic* DynamicLiveryMaterial;
+
+	TMap<FString, ELiveryColor> LiveryColorsStringMap;
+
 	TArray<AActor*>VisitedCheckpoints;
 
 	uint32 CurrentLap = 1;

@@ -4,9 +4,11 @@
 #include "Components/Button.h"
 #include "Components/SpinBox.h"
 #include "Components/ComboBoxString.h"
+#include "Components/CheckBox.h"
 #include "PlayerControllerBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "RacingGameMode.h"
+#include "VehicleBase.h"
 
 void UMainMenuWidget::NativeConstruct()
 {
@@ -56,6 +58,13 @@ void UMainMenuWidget::NativeConstruct()
 			RaceMode->SetSelectedOption(GameMode->GetRaceModeName());
 		}
 	}
+
+	FScriptDelegate LiveryColorChangedDelegate;
+	LiveryColorChangedDelegate.BindUFunction(this, FName("LiveryColorChanged"));
+	if (LiveryColor)
+	{
+		LiveryColor->OnSelectionChanged.AddUnique(LiveryColorChangedDelegate);
+	}
 }
 
 void UMainMenuWidget::StartGame()
@@ -93,5 +102,16 @@ void UMainMenuWidget::QuitGame() const
 	if (APlayerController* OwiningPlayer = GetOwningPlayer())
 	{
 		UKismetSystemLibrary::QuitGame(GetWorld(), OwiningPlayer, EQuitPreference::Quit, false);
+	}
+}
+
+void UMainMenuWidget::LiveryColorChanged() const
+{
+	if (APlayerControllerBase* const OwningController = Cast<APlayerControllerBase>(GetOwningPlayer()))
+	{
+		if (AVehicleBase* const OwningVehicle = Cast<AVehicleBase>(OwningController->GetPawn()))
+		{
+			OwningVehicle->SetAlbedoColorOnLiveryMaterial(LiveryColor->GetSelectedOption());
+		}
 	}
 }

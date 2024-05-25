@@ -32,6 +32,9 @@ private:
 	UFUNCTION()
 	void QuitGame() const;
 
+	UFUNCTION()
+	void LiveryColorChanged() const;
+
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* StartButton;
@@ -41,6 +44,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class USpinBox* NumberOfLaps;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UComboBoxString* LiveryColor;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UComboBoxString* RaceMode;
