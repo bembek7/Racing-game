@@ -130,24 +130,74 @@ void AVehicleBase::BeginPlay()
 	UMaterialInterface* const OrignalLiveryMaterial = Body->GetMaterialByName(LiverySlotName);
 	if (OrignalLiveryMaterial)
 	{
-		DynamicLiveryMaterial = UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this);
+		if (Body)
+		{
+			LiveryParts.Add(FLiveryPart(Body, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (FrontBumper)
+		{
+			LiveryParts.Add(FLiveryPart(FrontBumper, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (LeftDoor)
+		{
+			LiveryParts.Add(FLiveryPart(LeftDoor, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (RightDoor)
+		{
+			LiveryParts.Add(FLiveryPart(RightDoor, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (RearBumper)
+		{
+			LiveryParts.Add(FLiveryPart(RearBumper, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (RearBoot)
+		{
+			LiveryParts.Add(FLiveryPart(RearBoot, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (BackSpoiler)
+		{
+			LiveryParts.Add(FLiveryPart(BackSpoiler, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (LeftWingMirror)
+		{
+			LiveryParts.Add(FLiveryPart(LeftWingMirror, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (RightWingMirror)
+		{
+			LiveryParts.Add(FLiveryPart(RightWingMirror, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (LeftFender)
+		{
+			LiveryParts.Add(FLiveryPart(LeftFender, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (RightFender)
+		{
+			LiveryParts.Add(FLiveryPart(RightFender, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
+		if (FrontHood)
+		{
+			LiveryParts.Add(FLiveryPart(FrontHood, UMaterialInstanceDynamic::Create(OrignalLiveryMaterial, this)));
+		}
 	}
 
-	if (DynamicLiveryMaterial)
+	FScriptDelegate OnHitDelegate;
+	OnHitDelegate.BindUFunction(this, FName("OnLiveryPartHit"));
+
+	for (const auto& LiveryPart : LiveryParts)
 	{
-		Body->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		FrontBumper->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		LeftDoor->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		RightDoor->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		RearBumper->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		RearBoot->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		BackSpoiler->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		LeftWingMirror->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		RightWingMirror->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		LeftFender->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		RightFender->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
-		FrontHood->SetMaterialByName(LiverySlotName, DynamicLiveryMaterial);
+		if (LiveryPart.Mesh && LiveryPart.DynamicMaterial)
+		{
+			LiveryPart.Mesh->SetMaterialByName(LiverySlotName, LiveryPart.DynamicMaterial);
+			LiveryPart.Mesh->OnComponentBeginOverlap.AddUnique(OnHitDelegate);
+		}
 	}
+}
+
+void AVehicleBase::OnLiveryPartHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp) const
+{
+	UE_LOG(LogTemp, Warning, TEXT("Component: %s"), *HitComponent->GetName());
+	UE_LOG(LogTemp, Warning, TEXT(" Other Component hit %s"), *OtherComp->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("Bone hit %s"), *Hit.MyBoneName.ToString());
 }
 
 void AVehicleBase::LapFinished()

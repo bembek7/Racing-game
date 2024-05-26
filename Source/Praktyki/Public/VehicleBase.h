@@ -8,6 +8,20 @@
 
 struct FInputActionValue;
 
+USTRUCT()
+struct FLiveryPart 
+{	
+	GENERATED_BODY()
+
+	FLiveryPart() = default;
+	FLiveryPart(UStaticMeshComponent* PartMesh, UMaterialInstanceDynamic* PartDynamicMaterial) :
+		Mesh(PartMesh),
+		DynamicMaterial(PartDynamicMaterial)
+	{}
+	UStaticMeshComponent* Mesh;
+	UMaterialInstanceDynamic* DynamicMaterial;
+};
+
 UENUM()
 enum ELiveryColor : uint8 {
 	White,
@@ -45,6 +59,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+private:
+	UFUNCTION()
+	void OnLiveryPartHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -174,7 +192,9 @@ private:
 
 	TMap<FString, ELiveryColor> LiveryColorsStringMap;
 
-	TArray<AActor*>VisitedCheckpoints;
+	TArray<AActor*> VisitedCheckpoints;
+
+	TArray<FLiveryPart> LiveryParts;
 
 	uint32 CurrentLap = 1;
 
