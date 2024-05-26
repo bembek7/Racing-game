@@ -60,6 +60,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void ResetVehicle();
+
 private:
 	UFUNCTION()
 	void OnLiveryPartHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp) const;
@@ -188,8 +190,6 @@ protected:
 	bool bBlockEngineInput = true;
 
 private:
-	UMaterialInstanceDynamic* DynamicLiveryMaterial;
-
 	TMap<FString, ELiveryColor> LiveryColorsStringMap;
 
 	TArray<AActor*> VisitedCheckpoints;

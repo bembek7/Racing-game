@@ -189,14 +189,7 @@ void APlayerVehicle::ResetVehicle()
 {
 	if(!bBlockEngineInput)
 	{
-		const FVector ResetLocation = GetActorLocation() + FVector(0.0f, 0.0f, 50.0f);
-
-		FRotator ResetRotation = GetActorRotation();
-		ResetRotation.Pitch = 0.0f;
-		ResetRotation.Roll = 0.0f;
-
-		TeleportTo(ResetLocation, ResetRotation);
-		GetVehicleMovement()->StopMovementImmediately();
+		ResetVehicle();
 	}
 }
 

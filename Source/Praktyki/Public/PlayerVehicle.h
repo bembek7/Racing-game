@@ -43,7 +43,7 @@ private:
 	void SwitchToCarInteriorCamera();
 	void SwitchToCamera(class UCameraComponent* const CameraToSwitchOn);
 
-	void ResetVehicle();
+	virtual void ResetVehicle() override;
 
 	void RotateSteeringWheelToMatchWheels();
 

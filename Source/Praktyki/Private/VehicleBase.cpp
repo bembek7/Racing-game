@@ -193,6 +193,18 @@ void AVehicleBase::BeginPlay()
 	}
 }
 
+void AVehicleBase::ResetVehicle()
+{
+	const FVector ResetLocation = GetActorLocation() + FVector(0.0f, 0.0f, 50.0f);
+
+	FRotator ResetRotation = GetActorRotation();
+	ResetRotation.Pitch = 0.0f;
+	ResetRotation.Roll = 0.0f;
+
+	TeleportTo(ResetLocation, ResetRotation);
+	GetVehicleMovement()->StopMovementImmediately();
+}
+
 void AVehicleBase::OnLiveryPartHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp) const
 {
 	UE_LOG(LogTemp, Warning, TEXT("Component: %s"), *HitComponent->GetName());
@@ -259,29 +271,33 @@ void AVehicleBase::SetAlbedoColorOnLiveryMaterial(const FString& NewLiveryColor)
 {
 	const ELiveryColor ChosenColor = *LiveryColorsStringMap.Find(NewLiveryColor);
 	
-	if(DynamicLiveryMaterial)
+	UTexture* ChosenTexture;
+	switch (ChosenColor)
 	{
-		UTexture* ChosenTexture;
-		switch (ChosenColor)
+	case White:
+		ChosenTexture = LiveryColorWhite;
+		break;
+	case Orange:
+		ChosenTexture = LiveryColorOrange;
+		break;
+	case Yellow:
+		ChosenTexture = LiveryColorYellow;
+		break;
+	case Black:
+		ChosenTexture = LiveryColorBlack;
+		break;
+	default:
+		ChosenTexture = LiveryColorDefault;
+	}
+
+	if (ChosenTexture)
+	{
+		for (const auto& LiveryPart : LiveryParts)
 		{
-		case White:
-			ChosenTexture = LiveryColorWhite;
-			break;
-		case Orange:
-			ChosenTexture = LiveryColorOrange;
-			break;
-		case Yellow:
-			ChosenTexture = LiveryColorYellow;
-			break;
-		case Black:
-			ChosenTexture = LiveryColorBlack;
-			break;
-		default:
-			ChosenTexture = LiveryColorDefault;
-		}
-		if(ChosenTexture)
-		{
-			DynamicLiveryMaterial->SetTextureParameterValue(FName("Albedo"), ChosenTexture);
+			if (LiveryPart.DynamicMaterial)
+			{
+				LiveryPart.DynamicMaterial->SetTextureParameterValue(FName("Albedo"), ChosenTexture);
+			}
 		}
 	}
 }
