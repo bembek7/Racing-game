@@ -22,6 +22,7 @@ public:
 	virtual void RaceFinished() override;
 
 	virtual void Tick(float DeltaTime) override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -41,6 +42,8 @@ private:
 	void SwitchToFrontCamera();
 	void SwitchToCarInteriorCamera();
 	void SwitchToCamera(class UCameraComponent* const CameraToSwitchOn);
+
+	void ResetVehicle();
 
 	void RotateSteeringWheelToMatchWheels();
 
@@ -68,6 +71,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
 	class UInputAction* SwitchToCarInteriorCameraAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	class UInputAction* ResetVehicleAction;
 
 	UPROPERTY(EditDefaultsOnly)
 	class UCameraComponent* CameraFromAbove;

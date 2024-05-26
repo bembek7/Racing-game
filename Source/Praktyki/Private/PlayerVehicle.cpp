@@ -58,6 +58,11 @@ void APlayerVehicle::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 			EnhancedInputComponent->BindAction(HandbrakeAction, ETriggerEvent::Completed, this, &APlayerVehicle::StopHandbrake);
 		}
 
+		if (ResetVehicleAction)
+		{
+			EnhancedInputComponent->BindAction(ResetVehicleAction, ETriggerEvent::Started, this, &APlayerVehicle::ResetVehicle);
+		}
+
 		if (SwitchToNextCameraAction)
 		{
 			EnhancedInputComponent->BindAction(SwitchToNextCameraAction, ETriggerEvent::Started, this, &APlayerVehicle::SwitchToNextCamera);
@@ -177,6 +182,21 @@ void APlayerVehicle::SwitchToCamera(UCameraComponent* const CameraToSwitchOn)
 			CurrentCameraIndex = CameraIndex;
 		}
 		CameraToSwitchOn->SetActive(true);
+	}
+}
+
+void APlayerVehicle::ResetVehicle()
+{
+	if(!bBlockEngineInput)
+	{
+		const FVector ResetLocation = GetActorLocation() + FVector(0.0f, 0.0f, 50.0f);
+
+		FRotator ResetRotation = GetActorRotation();
+		ResetRotation.Pitch = 0.0f;
+		ResetRotation.Roll = 0.0f;
+
+		TeleportTo(ResetLocation, ResetRotation);
+		GetVehicleMovement()->StopMovementImmediately();
 	}
 }
 
