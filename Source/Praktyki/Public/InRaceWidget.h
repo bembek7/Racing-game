@@ -29,6 +29,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	FText GetRaceTimerText() const;
 
+	UFUNCTION(BlueprintCallable)
+	FText GetSurvivalRemainingTimeText() const;
+
 private:
 	UFUNCTION()
 	void VisibilityChanged();
@@ -44,4 +47,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* RaceTimerText;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* SurvivalTimeRemainingText;
 };

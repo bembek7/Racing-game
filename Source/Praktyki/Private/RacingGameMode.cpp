@@ -9,6 +9,7 @@ ARacingGameMode::ARacingGameMode()
 {
 	RaceModesNamesMap.Emplace(ERaceMode::Qualifications, TEXT("Qualifications"));
 	RaceModesNamesMap.Emplace(ERaceMode::Race, TEXT("Race"));
+	RaceModesNamesMap.Emplace(ERaceMode::Survival, TEXT("Survival"));
 }
 
 void ARacingGameMode::BeginPlay()
@@ -61,7 +62,7 @@ void ARacingGameMode::VehicleCrossedFinishLine(AVehicleBase* const VehicleThatCr
 
 bool ARacingGameMode::IsNumberOfLapsChangable() const
 {
-	if (CurrentRaceMode == ERaceMode::Qualifications)
+	if (CurrentRaceMode == ERaceMode::Qualifications || CurrentRaceMode == ERaceMode::Survival)
 	{
 		return false;
 	}
@@ -95,12 +96,16 @@ void ARacingGameMode::SetRaceModeFromString(const FString& RaceModeName)
 	{
 		NumberOfLaps = 1;
 	}
+	if (CurrentRaceMode == ERaceMode::Survival)
+	{
+		NumberOfLaps = 10;
+	}
 }
 
 void ARacingGameMode::RaceStarts()
 {
 	CurrentRaceTime = 0;
-	RaceTimer.Invalidate();
+	GetWorldTimerManager().ClearTimer(RaceTimer);
 	GetWorldTimerManager().SetTimer(RaceTimer, [this]() { ++CurrentRaceTime; }, 0.01f, true); // Could just set the timer, but I think it's easier this way
 
 	// We are calling it on every vehicle in case there are more vehicles in the future
@@ -129,4 +134,19 @@ void ARacingGameMode::SetVehiclesOnStartingPositions()
 			Vehicle->TeleportVehicleToStartingPosition(VehiclePostion.Value);
 		}
 	}
+}
+
+bool ARacingGameMode::IsInSurvivalMode() const
+{
+	return CurrentRaceMode == ERaceMode::Survival;
+}
+
+uint32 ARacingGameMode::GetSurvivalStartingTime() const
+{
+	return SurvivalStartingTime;
+}
+
+uint32 ARacingGameMode::GetSurvivalCheckpointIncrement() const
+{
+	return SurvivalCheckpointIncrement;
 }

@@ -9,7 +9,8 @@
 UENUM()
 enum ERaceMode : uint8 {
 	Qualifications,
-	Race
+	Race,
+	Survival
 };
 
 UCLASS()
@@ -40,6 +41,12 @@ public:
 
 	void SetVehiclesOnStartingPositions();
 
+	bool IsInSurvivalMode() const;
+
+	uint32 GetSurvivalStartingTime() const;
+
+	uint32 GetSurvivalCheckpointIncrement() const;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -63,5 +70,9 @@ private:
 
 	TMap<AActor*, FTransform> VehiclesStartingPostions;
 
-	uint32 CurrentRaceTime = 0; //Hundredths of second
+	uint32 CurrentRaceTime = 0; // Hundredths of second
+
+	const uint32 SurvivalStartingTime = 1000.f; // Hundredths of second
+
+	const uint32 SurvivalCheckpointIncrement = 400.f; // Hundredths of second
 };

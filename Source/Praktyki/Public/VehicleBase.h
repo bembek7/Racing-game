@@ -9,8 +9,8 @@
 struct FInputActionValue;
 
 USTRUCT()
-struct FLiveryPart 
-{	
+struct FLiveryPart
+{
 	GENERATED_BODY()
 
 	FLiveryPart() = default;
@@ -56,6 +56,8 @@ public:
 	void TeleportVehicleToStartingPosition(const FTransform& StartingPosition);
 
 	void SetAlbedoColorOnLiveryMaterial(const FString& NewLiveryColor);
+
+	int32 GetSurvivalRemainingTime() const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -203,4 +205,8 @@ private:
 	TArray<uint32>LapTimes;
 
 	FTimerHandle LapTimer;
+
+	FTimerHandle SurvivalTimer;
+
+	int32 SurvivalRemainingTime; // Hundredths of second
 };

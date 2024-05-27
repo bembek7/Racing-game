@@ -13,6 +13,7 @@ void UInRaceWidget::NativeConstruct()
 
 	LapProgressText->SetVisibility(ESlateVisibility::Collapsed);
 	RaceTimerText->SetVisibility(ESlateVisibility::Collapsed);
+	SurvivalTimeRemainingText->SetVisibility(ESlateVisibility::Collapsed);
 
 	FScriptDelegate OnVisibilityChangedDelegate;
 	OnVisibilityChangedDelegate.BindUFunction(this, FName("VisibilityChanged"));
@@ -31,7 +32,7 @@ FText UInRaceWidget::GetCountDownText() const
 
 FText UInRaceWidget::GetLapProgressText() const
 {
-	if (APlayerControllerBase* const OwningController = Cast<APlayerControllerBase>(GetOwningPlayer()))
+	if (APlayerController* const OwningController = GetOwningPlayer())
 	{
 		if (AVehicleBase* const OwningVehicle = Cast<AVehicleBase>(OwningController->GetPawn()))
 		{
@@ -68,19 +69,41 @@ FText UInRaceWidget::GetRaceTimerText() const
 	return FText();
 }
 
+FText UInRaceWidget::GetSurvivalRemainingTimeText() const
+{
+	if (APlayerController* const OwningController = GetOwningPlayer())
+	{
+		if (AVehicleBase* const OwningVehicle = Cast<AVehicleBase>(OwningController->GetPawn()))
+		{
+			return TimeToText(OwningVehicle->GetSurvivalRemainingTime());
+		}
+	}
+	return FText();
+}
+
 void UInRaceWidget::RaceStarted()
 {
-	if(CountDownText)
+	if (CountDownText)
 	{
 		CountDownText->SetVisibility(ESlateVisibility::Collapsed);
 	}
-	if(LapProgressText)
+	if (LapProgressText)
 	{
 		LapProgressText->SetVisibility(ESlateVisibility::Visible);
 	}
 	if (RaceTimerText)
 	{
 		RaceTimerText->SetVisibility(ESlateVisibility::Visible);
+	}
+	if (SurvivalTimeRemainingText)
+	{
+		if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+		{
+			if (GameMode->IsInSurvivalMode())
+			{
+				SurvivalTimeRemainingText->SetVisibility(ESlateVisibility::Visible);
+			}
+		}
 	}
 }
 
@@ -97,5 +120,9 @@ void UInRaceWidget::VisibilityChanged()
 	if (RaceTimerText)
 	{
 		RaceTimerText->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	if (SurvivalTimeRemainingText)
+	{
+		SurvivalTimeRemainingText->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }

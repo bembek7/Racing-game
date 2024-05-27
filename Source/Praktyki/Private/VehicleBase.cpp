@@ -3,6 +3,8 @@
 #include "VehicleBase.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
+#include "RacingGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 AVehicleBase::AVehicleBase()
 {
@@ -120,7 +122,6 @@ AVehicleBase::AVehicleBase()
 	LiveryColorsStringMap.Emplace(TEXT("Default"), ELiveryColor::Default);
 }
 
-
 void AVehicleBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -209,7 +210,7 @@ void AVehicleBase::OnLiveryPartHit(UPrimitiveComponent* const HitComponent, AAct
 {
 	UE_LOG(LogTemp, Warning, TEXT("Component: %s"), *HitComponent->GetName());
 	UE_LOG(LogTemp, Warning, TEXT(" Other Component hit %s"), *OtherComp->GetName());
-	//UE_LOG(LogTemp, Warning, TEXT("Bone hit %s"), *Hit.MyBoneName.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("Bone hit %s"), *Hit.MyBoneName.ToString());
 }
 
 void AVehicleBase::LapFinished()
@@ -218,6 +219,14 @@ void AVehicleBase::LapFinished()
 	VisitedCheckpoints.Empty();
 	LapTimes.Add(CurrentLapTime);
 	CurrentLapTime = 0;
+
+	if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+	{
+		if (GameMode->IsInSurvivalMode())
+		{
+			SurvivalRemainingTime += GameMode->GetSurvivalCheckpointIncrement();
+		}
+	}
 }
 
 void AVehicleBase::CheckpointReached(AActor* const CheckpointReached)
@@ -225,6 +234,14 @@ void AVehicleBase::CheckpointReached(AActor* const CheckpointReached)
 	if (!VisitedCheckpoints.Contains(CheckpointReached))
 	{
 		VisitedCheckpoints.Add(CheckpointReached);
+
+		if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+		{
+			if (GameMode->IsInSurvivalMode())
+			{
+				SurvivalRemainingTime += GameMode->GetSurvivalCheckpointIncrement();
+			}
+		}
 	}
 }
 
@@ -241,6 +258,9 @@ uint32 AVehicleBase::GetCurrentLap() const
 void AVehicleBase::RaceFinished()
 {
 	bBlockEngineInput = true;
+
+	GetWorldTimerManager().ClearTimer(SurvivalTimer);
+	GetWorldTimerManager().ClearTimer(LapTimer);
 }
 
 void AVehicleBase::RaceStarts()
@@ -252,8 +272,26 @@ void AVehicleBase::RaceStarts()
 	CurrentLap = 1;
 
 	CurrentLapTime = 0;
-	LapTimer.Invalidate();
+	GetWorldTimerManager().ClearTimer(LapTimer);
 	GetWorldTimerManager().SetTimer(LapTimer, [this]() { ++CurrentLapTime; }, 0.01f, true); // Could just set the timer, but I think it's easier this way
+
+	// Survival mode stuff
+	if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+	{
+		if (GameMode->IsInSurvivalMode())
+		{
+			SurvivalRemainingTime = GameMode->GetSurvivalStartingTime();
+			GetWorldTimerManager().ClearTimer(SurvivalTimer);
+			GetWorldTimerManager().SetTimer(SurvivalTimer, [this]()
+				{
+					--SurvivalRemainingTime;
+					if (SurvivalRemainingTime <= 0)
+					{
+						RaceFinished();
+					}
+				}, 0.01f, true); // Could just set the timer, but I think it's easier this way
+		}
+	}
 }
 
 TArray<uint32> AVehicleBase::GetLapTimes() const
@@ -270,7 +308,7 @@ void AVehicleBase::TeleportVehicleToStartingPosition(const FTransform& StartingP
 void AVehicleBase::SetAlbedoColorOnLiveryMaterial(const FString& NewLiveryColor)
 {
 	const ELiveryColor ChosenColor = *LiveryColorsStringMap.Find(NewLiveryColor);
-	
+
 	UTexture* ChosenTexture;
 	switch (ChosenColor)
 	{
@@ -300,4 +338,9 @@ void AVehicleBase::SetAlbedoColorOnLiveryMaterial(const FString& NewLiveryColor)
 			}
 		}
 	}
+}
+
+int32 AVehicleBase::GetSurvivalRemainingTime() const
+{
+	return SurvivalRemainingTime;
 }
