@@ -189,7 +189,7 @@ void APlayerVehicle::ResetVehicle()
 {
 	if(!bBlockEngineInput)
 	{
-		ResetVehicle();
+		Super::ResetVehicle();
 	}
 }
 
