@@ -10,109 +10,114 @@
 AVehicleBase::AVehicleBase()
 {
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(FName("Body"));
-	Body->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(Body, FName("SK_Porsche_911_Gt3_R1"));
 
 	FrontBumper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Front Bumper"));
-	FrontBumper->SetupAttachment(GetMesh(), FName("bumper_front"));
+	PartsBoneNames.Emplace(FrontBumper, FName("bumper_front"));
 
 	LeftDoor = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Door"));
-	LeftDoor->SetupAttachment(GetMesh(), FName("door_left"));
+	PartsBoneNames.Emplace(LeftDoor, FName("door_left"));
 
 	RightDoor = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Door"));
-	RightDoor->SetupAttachment(GetMesh(), FName("door_right"));
+	PartsBoneNames.Emplace(RightDoor, FName("door_right"));
 
 	RearBumper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Rear Bumper"));
-	RearBumper->SetupAttachment(GetMesh(), FName("bumper_rear"));
+	PartsBoneNames.Emplace(RearBumper, FName("bumper_rear"));
 
 	RearBoot = CreateDefaultSubobject<UStaticMeshComponent>(FName("Rear Boot"));
-	RearBoot->SetupAttachment(GetMesh(), FName("boot_rear"));
+	PartsBoneNames.Emplace(RearBoot, FName("boot_rear"));
 
 	BackSpoiler = CreateDefaultSubobject<UStaticMeshComponent>(FName("Back Spoiler"));
-	BackSpoiler->SetupAttachment(GetMesh(), FName("spoiler_back"));
+	PartsBoneNames.Emplace(BackSpoiler, FName("spoiler_back"));
 
 	LeftWingMirror = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Wing Mirror"));
-	LeftWingMirror->SetupAttachment(GetMesh(), FName("wing_mirror_left"));
+	PartsBoneNames.Emplace(LeftWingMirror, FName("wing_mirror_left"));
 
 	RightWingMirror = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Wing Mirror"));
-	RightWingMirror->SetupAttachment(GetMesh(), FName("wing_mirror_right"));
+	PartsBoneNames.Emplace(RightWingMirror, FName("wing_mirror_right"));
 
 	LeftBackWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Back Wheel"));
-	LeftBackWheel->SetupAttachment(GetMesh(), FName("suspension_back_left"));
+	PartsBoneNames.Emplace(LeftBackWheel, FName("suspension_back_left"));
 
 	RightBackWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Back Wheel"));
-	RightBackWheel->SetupAttachment(GetMesh(), FName("suspension_back_right"));
+	PartsBoneNames.Emplace(RightBackWheel, FName("suspension_back_right"));
 
 	LeftFrontWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Front Wheel"));
-	LeftFrontWheel->SetupAttachment(GetMesh(), FName("suspension_front_left"));
+	PartsBoneNames.Emplace(LeftFrontWheel, FName("suspension_front_left"));
 
 	RightFrontWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Front Wheel"));
-	RightFrontWheel->SetupAttachment(GetMesh(), FName("suspension_front_right"));
+	PartsBoneNames.Emplace(RightFrontWheel, FName("suspension_front_right"));
 
 	EngineComponents = CreateDefaultSubobject<UStaticMeshComponent>(FName("Engine Components"));
-	EngineComponents->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(EngineComponents, FName("SK_Porsche_911_Gt3_R1"));
 
 	ExteriorInteriorWindows = CreateDefaultSubobject<UStaticMeshComponent>(FName("Exterior Interior Windows"));
-	ExteriorInteriorWindows->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(ExteriorInteriorWindows, FName("SK_Porsche_911_Gt3_R1"));
 
 	LeftFender = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Fender"));
-	LeftFender->SetupAttachment(GetMesh(), FName("fender_left"));
+	PartsBoneNames.Emplace(LeftFender, FName("fender_left"));
 
 	RightFender = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Fender"));
-	RightFender->SetupAttachment(GetMesh(), FName("fender_right"));
+	PartsBoneNames.Emplace(RightFender, FName("fender_right"));
 
 	FrontHood = CreateDefaultSubobject<UStaticMeshComponent>(FName("Front Hood"));
-	FrontHood->SetupAttachment(GetMesh(), FName("hood_front"));
+	PartsBoneNames.Emplace(FrontHood, FName("hood_front"));
 
 	LeftRearCaliper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Rear Caliper"));
-	LeftRearCaliper->SetupAttachment(GetMesh(), FName("suspension_back_left"));
+	PartsBoneNames.Emplace(LeftRearCaliper, FName("suspension_back_left"));
 
 	RightRearCaliper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Rear Caliper"));
-	RightRearCaliper->SetupAttachment(GetMesh(), FName("suspension_back_right"));
+	PartsBoneNames.Emplace(RightRearCaliper, FName("suspension_back_right"));
 
 	LeftFrontCaliper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Front Caliper"));
-	LeftFrontCaliper->SetupAttachment(GetMesh(), FName("suspension_front_left"));
+	PartsBoneNames.Emplace(LeftFrontCaliper, FName("suspension_front_left"));
 
 	RightFrontCaliper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Front Caliper"));
-	RightFrontCaliper->SetupAttachment(GetMesh(), FName("suspension_front_right"));
+	PartsBoneNames.Emplace(RightFrontCaliper, FName("suspension_front_right"));
 
 	Interior = CreateDefaultSubobject<UStaticMeshComponent>(FName("Interior"));
-	Interior->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(Interior, FName("SK_Porsche_911_Gt3_R1"));
 
 	Net = CreateDefaultSubobject<UStaticMeshComponent>(FName("Net"));
-	Net->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(Net, FName("SK_Porsche_911_Gt3_R1"));
 
 	BrakePedal = CreateDefaultSubobject<UStaticMeshComponent>(FName("Brake Pedal"));
-	BrakePedal->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(BrakePedal, FName("SK_Porsche_911_Gt3_R1"));
 
 	AccelerationPedal = CreateDefaultSubobject<UStaticMeshComponent>(FName("Acceleration Pedal"));
-	AccelerationPedal->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(AccelerationPedal, FName("SK_Porsche_911_Gt3_R1"));
 
 	LeftRearBrakeDisc = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Rear Brake Disc"));
-	LeftRearBrakeDisc->SetupAttachment(GetMesh(), FName("suspension_back_left"));
+	PartsBoneNames.Emplace(LeftRearBrakeDisc, FName("suspension_back_left"));
 
 	RightRearBrakeDisc = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Rear Brake Disc"));
-	RightRearBrakeDisc->SetupAttachment(GetMesh(), FName("suspension_back_right"));
+	PartsBoneNames.Emplace(RightRearBrakeDisc, FName("suspension_back_right"));
 
 	LeftFrontBrakeDisc = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Front Brake Disc"));
-	LeftFrontBrakeDisc->SetupAttachment(GetMesh(), FName("suspension_front_left"));
+	PartsBoneNames.Emplace(LeftFrontBrakeDisc, FName("suspension_front_left"));
 
 	RightFrontBrakeDisc = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Front Brake Disc"));
-	RightFrontBrakeDisc->SetupAttachment(GetMesh(), FName("suspension_front_right"));
+	PartsBoneNames.Emplace(RightFrontBrakeDisc, FName("suspension_front_right"));
 
 	RearDiffuser = CreateDefaultSubobject<UStaticMeshComponent>(FName("Rear Diffuser"));
-	RearDiffuser->SetupAttachment(GetMesh(), FName("diffuser_back"));
+	PartsBoneNames.Emplace(RearDiffuser, FName("diffuser_back"));
 
 	SeatNetClamps = CreateDefaultSubobject<UStaticMeshComponent>(FName("Seat Net Clamps"));
-	SeatNetClamps->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(SeatNetClamps, FName("SK_Porsche_911_Gt3_R1"));
 
 	SteeringWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Steering Wheel"));
-	SteeringWheel->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(SteeringWheel, FName("SK_Porsche_911_Gt3_R1"));
 
 	Wiper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Wiper"));
-	Wiper->SetupAttachment(GetMesh(), FName("hood_front"));
+	PartsBoneNames.Emplace(Wiper, FName("hood_front"));
 
 	CockpitConsole = CreateDefaultSubobject<UStaticMeshComponent>(FName("Cockpit Console"));
-	CockpitConsole->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
+	PartsBoneNames.Emplace(CockpitConsole, FName("SK_Porsche_911_Gt3_R1"));
+
+	for (auto& Part : PartsBoneNames)
+	{
+		Part.Key->SetupAttachment(GetMesh(), Part.Value);
+	}
 
 	RearMirrorsSceneCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(FName("Rear Mirrors Scene Capture"));
 	RearMirrorsSceneCapture->SetupAttachment(GetMesh(), FName("RearMirrorsSceneCapture"));
@@ -210,7 +215,7 @@ void AVehicleBase::ResetVehicle()
 
 void AVehicleBase::OnVehicleHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp, const FVector& NormalImpuls, const FHitResult& Hit)
 {
-	const FVector Velocity = GetVelocity(); 
+	const FVector Velocity = GetVelocity();
 
 	const float HitStrength = FMath::Abs(FVector::DotProduct(Velocity, Hit.ImpactNormal)); // It's definitely not ideal, but it have to do for now
 
@@ -246,7 +251,7 @@ void AVehicleBase::OnVehicleHit(UPrimitiveComponent* const HitComponent, AActor*
 
 void AVehicleBase::DamagePart(FLiveryPart& HitPart, const float HitStrength)
 {
-	if(HitPart.CurrentHealth > 0)
+	if (HitPart.CurrentHealth > 0)
 	{
 		const float HitDamage = HitStrength * LiveryDamageFromHitStrengthMultiplier;
 		HitPart.CurrentHealth -= HitDamage;
@@ -260,7 +265,7 @@ void AVehicleBase::DamagePart(FLiveryPart& HitPart, const float HitStrength)
 		else
 		{
 			const float MaterialDamageValue = 1 - HitPart.CurrentHealth / HitPart.MaxHealth;
-			if(HitPart.DynamicMaterial)
+			if (HitPart.DynamicMaterial)
 			{
 				HitPart.DynamicMaterial->SetScalarParameterValue(FName("DamageValue"), MaterialDamageValue);
 			}
@@ -335,18 +340,24 @@ void AVehicleBase::RaceStarts()
 	{
 		if (GameMode->IsInSurvivalMode())
 		{
-			SurvivalRemainingTime = GameMode->GetSurvivalStartingTime();
-			GetWorldTimerManager().ClearTimer(SurvivalTimer);
-			GetWorldTimerManager().SetTimer(SurvivalTimer, [this]()
-				{
-					--SurvivalRemainingTime;
-					if (SurvivalRemainingTime <= 0)
-					{
-						RaceFinished();
-					}
-				}, 0.01f, true); // Could just set the timer, but I think it's easier this way
+			StartSurvivalTimer(GameMode->GetSurvivalStartingTime());
 		}
 	}
+}
+
+void AVehicleBase::StartSurvivalTimer(const float StartingTime)
+{
+	SurvivalRemainingTime = StartingTime;
+	GetWorldTimerManager().ClearTimer(SurvivalTimer);
+	GetWorldTimerManager().SetTimer(SurvivalTimer, [this]()
+	{
+		--SurvivalRemainingTime;
+		if (SurvivalRemainingTime <= 0)
+		{
+			RaceFinished();
+		}
+	}, 0.01f, true); // Could just set the timer, but I think it's easier this way
+
 }
 
 TArray<uint32> AVehicleBase::GetLapTimes() const
@@ -354,10 +365,35 @@ TArray<uint32> AVehicleBase::GetLapTimes() const
 	return LapTimes;
 }
 
-void AVehicleBase::TeleportVehicleToStartingPosition(const FTransform& StartingPosition)
+void AVehicleBase::PrepareForRace(const FTransform& StartingPosition)
+{
+	ResetLiveryParts();
+	TeleportToStartingPosition(StartingPosition);
+}
+
+void AVehicleBase::TeleportToStartingPosition(const FTransform& StartingPosition)
 {
 	TeleportTo(StartingPosition.GetLocation(), StartingPosition.Rotator());
 	GetVehicleMovement()->StopMovementImmediately();
+}
+
+void AVehicleBase::ResetLiveryParts()
+{
+	for (auto& LiveryPart : LiveryParts)
+	{
+		LiveryPart.CurrentHealth = LiveryPart.MaxHealth;
+		if (LiveryPart.Mesh)
+		{
+			LiveryPart.Mesh->SetSimulatePhysics(false);
+			
+			FAttachmentTransformRules AttachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
+			LiveryPart.Mesh->AttachToComponent(GetMesh(), AttachmentRules, *PartsBoneNames.Find(LiveryPart.Mesh));
+		}
+		if (LiveryPart.DynamicMaterial)
+		{
+			LiveryPart.DynamicMaterial->SetScalarParameterValue(FName("DamageValue"), 0.f);
+		}
+	}
 }
 
 void AVehicleBase::SetAlbedoColorOnLiveryMaterial(const FString& NewLiveryColor)

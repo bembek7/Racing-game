@@ -125,13 +125,14 @@ uint32 ARacingGameMode::GetRaceTime() const
 	return CurrentRaceTime;
 }
 
-void ARacingGameMode::SetVehiclesOnStartingPositions()
+// prepare vehicles
+void ARacingGameMode::PrepareVehicles()
 {
 	for (const auto& VehiclePostion : VehiclesStartingPostions)
 	{
 		if (AVehicleBase* const Vehicle = Cast<AVehicleBase>(VehiclePostion.Key))
 		{
-			Vehicle->TeleportVehicleToStartingPosition(VehiclePostion.Value);
+			Vehicle->PrepareForRace(VehiclePostion.Value);
 		}
 	}
 }

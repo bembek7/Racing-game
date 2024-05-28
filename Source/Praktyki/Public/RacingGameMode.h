@@ -39,7 +39,7 @@ public:
 
 	uint32 GetRaceTime() const;
 
-	void SetVehiclesOnStartingPositions();
+	void PrepareVehicles();
 
 	bool IsInSurvivalMode() const;
 
@@ -57,6 +57,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AActor> CheckpointClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "SurvivalMode")
+	uint32 SurvivalStartingTime = 1000.f; // Hundredths of second
+
+	UPROPERTY(EditDefaultsOnly, Category = "SurvivalMode")
+	uint32 SurvivalCheckpointIncrement = 400.f; // Hundredths of second
+
 private:
 	FTimerHandle RaceTimer;
 
@@ -71,8 +77,4 @@ private:
 	TMap<AActor*, FTransform> VehiclesStartingPostions;
 
 	uint32 CurrentRaceTime = 0; // Hundredths of second
-
-	const uint32 SurvivalStartingTime = 1000.f; // Hundredths of second
-
-	const uint32 SurvivalCheckpointIncrement = 400.f; // Hundredths of second
 };

@@ -7,6 +7,7 @@
 #include "VehicleBase.generated.h"
 
 struct FInputActionValue;
+class USceneCaptureComponent2D;
 
 USTRUCT()
 struct FLiveryPart
@@ -56,7 +57,7 @@ public:
 
 	TArray<uint32> GetLapTimes() const;
 
-	void TeleportVehicleToStartingPosition(const FTransform& StartingPosition);
+	void PrepareForRace(const FTransform& StartingPosition);
 
 	void SetAlbedoColorOnLiveryMaterial(const FString& NewLiveryColor);
 
@@ -72,6 +73,12 @@ private:
 	void OnVehicleHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp, const FVector& NormalImpuls, const FHitResult& Hit);
 
 	void DamagePart(FLiveryPart& HitPart, const float HitStrength);
+
+	void TeleportToStartingPosition(const FTransform& StartingPosition);
+
+	void ResetLiveryParts();
+
+	void StartSurvivalTimer(const float StartingTime);
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -180,7 +187,7 @@ protected:
 	UStaticMeshComponent* Wiper;
 
 	UPROPERTY(EditDefaultsOnly)
-	class USceneCaptureComponent2D* RearMirrorsSceneCapture;
+	USceneCaptureComponent2D* RearMirrorsSceneCapture;
 
 	UPROPERTY(EditDefaultsOnly)
 	UTexture* LiveryColorDefault;
@@ -204,6 +211,8 @@ protected:
 
 private:
 	TMap<FString, ELiveryColor> LiveryColorsStringMap;
+
+	TMap<UStaticMeshComponent*, FName> PartsBoneNames;;
 
 	TArray<AActor*> VisitedCheckpoints;
 
