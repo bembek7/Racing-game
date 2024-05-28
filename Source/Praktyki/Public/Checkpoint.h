@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Checkpoint.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class PRAKTYKI_API ACheckpoint : public AActor
 {
@@ -20,9 +22,9 @@ protected:
 
 private:
 	UFUNCTION()
-	void ActorPassedTheCheckpoint(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp);
+	void ActorPassedTheCheckpoint(UPrimitiveComponent* const OverlappedComp, AActor* const OtherActor, UPrimitiveComponent* const OtherComp);
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	class UBoxComponent* BoxCollider;
+	UBoxComponent* BoxCollider;
 };

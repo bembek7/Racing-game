@@ -7,8 +7,11 @@
 #include "RaceFinishedWidget.generated.h"
 
 /**
- * 
+ *
  */
+class UButton;
+class UScrollBox;
+
 UCLASS()
 class PRAKTYKI_API URaceFinishedWidget : public UUserWidget
 {
@@ -16,8 +19,6 @@ class PRAKTYKI_API URaceFinishedWidget : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override;
-
-protected:
 
 private:
 	UFUNCTION()
@@ -35,16 +36,17 @@ private:
 
 	UFUNCTION()
 	void QuitGame() const;
+
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* GoToMainMenuButton;
+	UButton* GoToMainMenuButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* PlayAgainButton;
+	UButton* PlayAgainButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UScrollBox* LapTimes;
+	UScrollBox* LapTimes;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* QuitButton;
+	UButton* QuitButton;
 };

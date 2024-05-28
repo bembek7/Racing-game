@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "FinishLine.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class PRAKTYKI_API AFinishLine : public AActor
 {
@@ -20,9 +22,9 @@ protected:
 
 private:
 	UFUNCTION()
-	void ActorCrossedTheLine(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp) const;
+	void ActorCrossedTheLine(UPrimitiveComponent* const OverlappedComp, AActor* const OtherActor, UPrimitiveComponent* const OtherComp) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	class UBoxComponent* BoxCollider;
+	UBoxComponent* BoxCollider;
 };

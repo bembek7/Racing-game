@@ -9,6 +9,9 @@
 /**
  *
  */
+class UInputMappingContext;
+class UInRaceWidget;
+
 UCLASS()
 class PRAKTYKI_API APlayerControllerBase : public APlayerController
 {
@@ -34,21 +37,21 @@ private:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputMappingContext* InputMappingContext;
+	UInputMappingContext* InputMappingContext;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UUserWidget>MainMenuWidgetClass;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UUserWidget>InRaceWidgetClass;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UUserWidget>RaceFinishedWidgetClass;
 
 private:
 	const float TimeToRaceStart = 3.f;
 	FTimerHandle CountDownHandle;
-	class UInRaceWidget* InRaceWidget;
+	UInRaceWidget* InRaceWidget;
 	UUserWidget* MainMenuWidget;
 	UUserWidget* RaceFinishedWidget;
 };

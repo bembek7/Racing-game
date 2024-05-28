@@ -6,10 +6,10 @@
 #include "RacingGameMode.h"
 #include "VehicleBase.h"
 
-// Sets default values
 AFinishLine::AFinishLine()
 {
 	BoxCollider = CreateDefaultSubobject<UBoxComponent>(FName("Box Collider"));
+	SetRootComponent(BoxCollider);
 }
 
 void AFinishLine::BeginPlay()
@@ -19,7 +19,7 @@ void AFinishLine::BeginPlay()
 	BoxCollider->OnComponentBeginOverlap.AddUnique(OnBeginOverlapDelegate);
 }
 
-void AFinishLine::ActorCrossedTheLine(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp) const
+void AFinishLine::ActorCrossedTheLine(UPrimitiveComponent* const OverlappedComp, AActor* const OtherActor, UPrimitiveComponent* const OtherComp) const
 {
 	if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
 	{

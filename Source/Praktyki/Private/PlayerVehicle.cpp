@@ -4,10 +4,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "ChaosWheeledVehicleMovementComponent.h"
 #include "PlayerControllerBase.h"
+#include "ChaosVehicleMovementComponent.h"
 
 APlayerVehicle::APlayerVehicle()
 {
@@ -187,7 +186,7 @@ void APlayerVehicle::SwitchToCamera(UCameraComponent* const CameraToSwitchOn)
 
 void APlayerVehicle::ResetVehicle()
 {
-	if(!bBlockEngineInput)
+	if (!bBlockEngineInput)
 	{
 		Super::ResetVehicle();
 	}

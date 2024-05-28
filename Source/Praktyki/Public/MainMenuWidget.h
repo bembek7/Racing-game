@@ -9,6 +9,10 @@
 /**
  *
  */
+class UButton;
+class USpinBox;
+class UComboBoxString;
+
 UCLASS()
 class PRAKTYKI_API UMainMenuWidget : public UUserWidget
 {
@@ -16,8 +20,6 @@ class PRAKTYKI_API UMainMenuWidget : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override;
-
-protected:
 
 private:
 	UFUNCTION()
@@ -37,17 +39,17 @@ private:
 
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* StartButton;
+	UButton* StartButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* QuitButton;
+	UButton* QuitButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class USpinBox* NumberOfLaps;
+	USpinBox* NumberOfLaps;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UComboBoxString* LiveryColor;
+	UComboBoxString* LiveryColor;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UComboBoxString* RaceMode;
+	UComboBoxString* RaceMode;
 };

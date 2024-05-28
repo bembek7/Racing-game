@@ -7,6 +7,7 @@
 ACheckpoint::ACheckpoint()
 {
 	BoxCollider = CreateDefaultSubobject<UBoxComponent>(FName("Box Collider"));
+	SetRootComponent(BoxCollider);
 }
 
 void ACheckpoint::BeginPlay()
@@ -16,7 +17,7 @@ void ACheckpoint::BeginPlay()
 	BoxCollider->OnComponentBeginOverlap.AddUnique(OnBeginOverlapDelegate);
 }
 
-void ACheckpoint::ActorPassedTheCheckpoint(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp)
+void ACheckpoint::ActorPassedTheCheckpoint(UPrimitiveComponent* const OverlappedComp, AActor* const OtherActor, UPrimitiveComponent* const OtherComp)
 {
 	if (AVehicleBase* const VehicleThatPassed = Cast<AVehicleBase>(OtherActor))
 	{

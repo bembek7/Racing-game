@@ -9,6 +9,10 @@
 /**
  *
  */
+class UInputAction;
+class UCameraComponent;
+class USpringArmComponent;
+
 UCLASS()
 class PRAKTYKI_API APlayerVehicle : public AVehicleBase
 {
@@ -49,43 +53,43 @@ private:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* SteeringAction;
+	UInputAction* SteeringAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* ThrottleAction;
+	UInputAction* ThrottleAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* BrakeAction;
+	UInputAction* BrakeAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* HandbrakeAction;
+	UInputAction* HandbrakeAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* SwitchToNextCameraAction;
+	UInputAction* SwitchToNextCameraAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* SwitchToCameraFromAboveAction;
+	UInputAction* SwitchToCameraFromAboveAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* SwitchToFrontCameraAction;
+	UInputAction* SwitchToFrontCameraAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* SwitchToCarInteriorCameraAction;
+	UInputAction* SwitchToCarInteriorCameraAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* ResetVehicleAction;
+	UInputAction* ResetVehicleAction;
 
 	UPROPERTY(EditDefaultsOnly)
-	class UCameraComponent* CameraFromAbove;
+	UCameraComponent* CameraFromAbove;
 
 	UPROPERTY(EditDefaultsOnly)
-	class UCameraComponent* CarInteriorCamera;
+	UCameraComponent* CarInteriorCamera;
 
 	UPROPERTY(EditDefaultsOnly)
-	class UCameraComponent* FrontCamera;
+	UCameraComponent* FrontCamera;
 
 	UPROPERTY(EditDefaultsOnly)
-	class USpringArmComponent* SpringArm;
+	USpringArmComponent* SpringArm;
 
 private:
 	TArray<UCameraComponent*> Cameras;

@@ -9,6 +9,8 @@
 /**
  *
  */
+class UTextBlock;
+
 UCLASS()
 class PRAKTYKI_API UInRaceWidget : public UUserWidget
 {
@@ -40,14 +42,14 @@ private:
 
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UTextBlock* CountDownText;
+	UTextBlock* CountDownText;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UTextBlock* LapProgressText;
+	UTextBlock* LapProgressText;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UTextBlock* RaceTimerText;
+	UTextBlock* RaceTimerText;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UTextBlock* SurvivalTimeRemainingText;
+	UTextBlock* SurvivalTimeRemainingText;
 };

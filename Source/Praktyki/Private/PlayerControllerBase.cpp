@@ -74,7 +74,7 @@ void APlayerControllerBase::StartCountDown()
 
 	if (ARacingGameMode* const GameMode = Cast<ARacingGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
 	{
-		GameMode->SetVehiclesOnStartingPositions();
+		GameMode->PrepareVehicles();
 	}
 }
 

@@ -1,6 +1,5 @@
 // Copyright 2023 Teyon. All Rights Reserved.
 
-
 #include "RaceFinishedWidget.h"
 #include "Components/Button.h"
 #include "PlayerControllerBase.h"
@@ -59,7 +58,7 @@ void URaceFinishedWidget::PlayAgain()
 void URaceFinishedWidget::UpdateLapTimesList()
 {
 	if (LapTimes)
-	{	
+	{
 		LapTimes->ClearChildren();
 		if (APlayerControllerBase* const OwningController = Cast<APlayerControllerBase>(GetOwningPlayer()))
 		{
