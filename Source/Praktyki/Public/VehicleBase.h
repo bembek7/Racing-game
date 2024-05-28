@@ -16,10 +16,13 @@ struct FLiveryPart
 	FLiveryPart() = default;
 	FLiveryPart(UStaticMeshComponent* PartMesh, UMaterialInstanceDynamic* PartDynamicMaterial) :
 		Mesh(PartMesh),
-		DynamicMaterial(PartDynamicMaterial)
+		DynamicMaterial(PartDynamicMaterial),
+		CurrentHealth(MaxHealth)
 	{}
 	UStaticMeshComponent* Mesh;
 	UMaterialInstanceDynamic* DynamicMaterial;
+	float MaxHealth = 100.f; // Can't do const in USTRUCT
+	float CurrentHealth;
 };
 
 UENUM()
@@ -66,7 +69,9 @@ protected:
 
 private:
 	UFUNCTION()
-	void OnLiveryPartHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp) const;
+	void OnVehicleHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp, const FVector& NormalImpuls, const FHitResult& Hit);
+
+	void DamagePart(FLiveryPart& HitPart, const float HitStrength);
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -169,6 +174,9 @@ protected:
 	UStaticMeshComponent* SteeringWheel;
 
 	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* CockpitConsole;
+
+	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Wiper;
 
 	UPROPERTY(EditDefaultsOnly)
@@ -191,6 +199,9 @@ protected:
 
 	bool bBlockEngineInput = true;
 
+	UPROPERTY(EditDefaultsOnly)
+	float LiveryDamageFromHitStrengthMultiplier = 0.05f;
+
 private:
 	TMap<FString, ELiveryColor> LiveryColorsStringMap;
 
@@ -208,5 +219,5 @@ private:
 
 	FTimerHandle SurvivalTimer;
 
-	int32 SurvivalRemainingTime; // Hundredths of second
+	int32 SurvivalRemainingTime = 0; // Hundredths of second
 };

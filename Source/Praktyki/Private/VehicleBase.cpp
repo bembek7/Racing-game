@@ -1,15 +1,14 @@
 // Copyright 2023 Teyon. All Rights Reserved.
 
 #include "VehicleBase.h"
-#include "ChaosWheeledVehicleMovementComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "RacingGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "ChaosVehicleMovementComponent.h"
 
 AVehicleBase::AVehicleBase()
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(FName("Body"));
 	Body->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
 
@@ -107,10 +106,13 @@ AVehicleBase::AVehicleBase()
 	SeatNetClamps->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
 
 	SteeringWheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Steering Wheel"));
-	SteeringWheel->SetupAttachment(GetMesh(), FName("hood_front"));
+	SteeringWheel->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
 
 	Wiper = CreateDefaultSubobject<UStaticMeshComponent>(FName("Wiper"));
 	Wiper->SetupAttachment(GetMesh(), FName("hood_front"));
+
+	CockpitConsole = CreateDefaultSubobject<UStaticMeshComponent>(FName("Cockpit Console"));
+	CockpitConsole->SetupAttachment(GetMesh(), FName("SK_Porsche_911_Gt3_R1"));
 
 	RearMirrorsSceneCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(FName("Rear Mirrors Scene Capture"));
 	RearMirrorsSceneCapture->SetupAttachment(GetMesh(), FName("RearMirrorsSceneCapture"));
@@ -181,17 +183,17 @@ void AVehicleBase::BeginPlay()
 		}
 	}
 
-	FScriptDelegate OnHitDelegate;
-	OnHitDelegate.BindUFunction(this, FName("OnLiveryPartHit"));
-
 	for (const auto& LiveryPart : LiveryParts)
 	{
 		if (LiveryPart.Mesh && LiveryPart.DynamicMaterial)
 		{
 			LiveryPart.Mesh->SetMaterialByName(LiverySlotName, LiveryPart.DynamicMaterial);
-			LiveryPart.Mesh->OnComponentBeginOverlap.AddUnique(OnHitDelegate);
 		}
 	}
+
+	FScriptDelegate OnHitDelegate;
+	OnHitDelegate.BindUFunction(this, FName("OnVehicleHit"));
+	GetMesh()->OnComponentHit.AddUnique(OnHitDelegate);
 }
 
 void AVehicleBase::ResetVehicle()
@@ -206,11 +208,64 @@ void AVehicleBase::ResetVehicle()
 	GetVehicleMovement()->StopMovementImmediately();
 }
 
-void AVehicleBase::OnLiveryPartHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp) const
+void AVehicleBase::OnVehicleHit(UPrimitiveComponent* const HitComponent, AActor* const OtherActor, UPrimitiveComponent* const OtherComp, const FVector& NormalImpuls, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Component: %s"), *HitComponent->GetName());
-	UE_LOG(LogTemp, Warning, TEXT(" Other Component hit %s"), *OtherComp->GetName());
-	// UE_LOG(LogTemp, Warning, TEXT("Bone hit %s"), *Hit.MyBoneName.ToString());
+	const FVector Velocity = GetVelocity(); 
+
+	const float HitStrength = FMath::Abs(FVector::DotProduct(Velocity, Hit.ImpactNormal)); // It's definitely not ideal, but it have to do for now
+
+	const FVector TraceStart = Hit.Location;
+
+	TArray<AActor*> ActorsToIgnore;
+
+	TArray<FHitResult> TraceHitResults;
+
+	const float TraceRadius = 35.f;
+
+	const bool LiveryHit = UKismetSystemLibrary::SphereTraceMulti(GetWorld(), TraceStart, TraceStart, TraceRadius, UEngineTypes::ConvertToTraceType(ECC_Camera), false,
+		ActorsToIgnore, EDrawDebugTrace::None, TraceHitResults, false);
+
+	if (LiveryHit)
+	{
+		for (const auto& HitResult : TraceHitResults)
+		{
+			if (HitResult.GetActor() == this)
+			{
+				for (auto& LiveryPart : LiveryParts)
+				{
+					if (LiveryPart.Mesh == HitResult.Component)
+					{
+						DamagePart(LiveryPart, HitStrength);
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+void AVehicleBase::DamagePart(FLiveryPart& HitPart, const float HitStrength)
+{
+	if(HitPart.CurrentHealth > 0)
+	{
+		const float HitDamage = HitStrength * LiveryDamageFromHitStrengthMultiplier;
+		HitPart.CurrentHealth -= HitDamage;
+		if (HitPart.CurrentHealth <= 0)
+		{
+			if (HitPart.Mesh && HitPart.Mesh != Body)
+			{
+				HitPart.Mesh->SetSimulatePhysics(true);
+			}
+		}
+		else
+		{
+			const float MaterialDamageValue = 1 - HitPart.CurrentHealth / HitPart.MaxHealth;
+			if(HitPart.DynamicMaterial)
+			{
+				HitPart.DynamicMaterial->SetScalarParameterValue(FName("DamageValue"), MaterialDamageValue);
+			}
+		}
+	}
 }
 
 void AVehicleBase::LapFinished()
