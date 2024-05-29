@@ -125,7 +125,6 @@ uint32 ARacingGameMode::GetRaceTime() const
 	return CurrentRaceTime;
 }
 
-// prepare vehicles
 void ARacingGameMode::PrepareVehicles()
 {
 	for (const auto& VehiclePostion : VehiclesStartingPostions)

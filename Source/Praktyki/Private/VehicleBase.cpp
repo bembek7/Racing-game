@@ -350,14 +350,13 @@ void AVehicleBase::StartSurvivalTimer(const float StartingTime)
 	SurvivalRemainingTime = StartingTime;
 	GetWorldTimerManager().ClearTimer(SurvivalTimer);
 	GetWorldTimerManager().SetTimer(SurvivalTimer, [this]()
-	{
-		--SurvivalRemainingTime;
-		if (SurvivalRemainingTime <= 0)
 		{
-			RaceFinished();
-		}
-	}, 0.01f, true); // Could just set the timer, but I think it's easier this way
-
+			--SurvivalRemainingTime;
+			if (SurvivalRemainingTime <= 0)
+			{
+				RaceFinished();
+			}
+		}, 0.01f, true); // Could just set the timer, but I think it's easier this way
 }
 
 TArray<uint32> AVehicleBase::GetLapTimes() const
@@ -385,7 +384,7 @@ void AVehicleBase::ResetLiveryParts()
 		if (LiveryPart.Mesh)
 		{
 			LiveryPart.Mesh->SetSimulatePhysics(false);
-			
+
 			FAttachmentTransformRules AttachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 			LiveryPart.Mesh->AttachToComponent(GetMesh(), AttachmentRules, *PartsBoneNames.Find(LiveryPart.Mesh));
 		}
