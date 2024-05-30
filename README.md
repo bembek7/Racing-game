@@ -2,6 +2,8 @@
 
 This is a simple racing game developed with Unreal Engine 5.
 
+[![Alt text](https://img.youtube.com/vi/NMupr8zrmLA/0.jpg)](https://youtu.be/NMupr8zrmLA)
+
 ## Game Modes
 
 1. **Qualifications**
